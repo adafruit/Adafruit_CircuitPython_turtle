@@ -31,10 +31,14 @@ class Color:
     WHITE = 0xFFFFFF
     BLACK = 0x0000
     RED =  0xFF0000
+    ORANGE = 0xFFA500
+    YELLOW = 0xFFFF00
     GREEN =  0x00FF00
     BLUE = 0x0000FF
+    PURPLE = 0x800080
+    PINK = 0xFFC0CB
 
-    colors = (WHITE, BLACK, RED, GREEN, BLUE)
+    colors = (WHITE, BLACK, RED, ORANGE, YELLOW, GREEN, BLUE, PURPLE, PINK)
 
 class Vec2D(tuple):
     """A 2 dimensional vector class, used as a helper class
@@ -136,8 +140,8 @@ class turtle:
         self._display.wait_for_frame()
 
     def _drawturtle(self):
-        self._turtle_sprite.x = self._x - 4
-        self._turtle_sprite.y = self._y - 4
+        self._turtle_sprite.x = int(self._x - 4)
+        self._turtle_sprite.y = int(self._y - 4)
         #print("pos (%d, %d)" % (self._x, self._y))
 
     # Turtle motion
@@ -196,13 +200,13 @@ class turtle:
 
         while (not rev and x0 <= x1) or (rev and x1 <= x0):
             if steep:
-                self._fg_bitmap[y0, x0] = self._pencolor
+                self._fg_bitmap[int(y0), int(x0)] = self._pencolor
                 self._x = y0
                 self._y = x0
                 self._drawturtle()
                 time.sleep(0.003)
             else:
-                self._fg_bitmap[x0, y0] = self._pencolor
+                self._fg_bitmap[int(x0), int(y0)] = self._pencolor
                 self._x = x0
                 self._y = y0
                 self._drawturtle()
@@ -232,13 +236,61 @@ class turtle:
         self.setheading(90)
         self.goto(0,0)
 
-    def circle(radius, extent=None, steps=None):
+    def circle(self, radius, extent=None, steps=None):
         raise NotImplementedError
 
-    def dot(size=None, *color):
+    def dot(self, size=None, *color):
         raise NotImplementedError
+
+    def stamp(self):
+        raise NotImplementedError
+
+    def clearstamp(self):
+        raise NotImplementedError
+
+    def clearstamps(self):
+        raise NotImplementedError
+
+    def undo(self):
+        raise NotImplementedError
+
+    def speed(self, speed=None):
+        raise NotImplementedError
+
 
     ####################
+    # Tell turtle's state
+    def pos(self):
+        return Vec2D(self._x - self._w//2, self._h//2 - self._y)
+    position=pos
+
+
+
+
+    def heading(self):
+        return self._heading
+
+
+    # Pen control
+    def pendown(self):
+        self._penstate = True
+    pd = pendown
+    down = pendown
+
+    def penup(self):
+        self._penstate = False
+    pu = penup
+    up = penup
+
+    def isdown(self):
+        return self._penstate
+
+    def pencolor(self, c):
+        if not c in Color.colors:
+            raise RuntimeError("Color must be one of the 'color' class items")
+        self._pencolor = 1 + Color.colors.index(c)
+
+
 
     def mode(self, mode=None):
         if mode == "standard":
@@ -258,38 +310,3 @@ class turtle:
         else:
             self._heading += angle
         self._heading %= 360         # wrap around
-
-
-
-
-    def heading(self):
-        return self._heading
-
-    def pencolor(self, c):
-        if not c in Color.colors:
-            raise RuntimeError("Color must be one of the 'color' class items")
-        #print(self._fg_palette[0])
-        self._pencolor = 1 + Color.colors.index(c)
-
-    # Tell turtle's state
-    def pos(self):
-        return Vec2D(self._x - self._w//2, self._h//2 - self._y)
-    def position(self):
-        return self.pos()
-
-    # Pen control
-    def pendown(self):
-        self._penstate = True
-    def pd(self):
-        self.pendown()
-    def down(self):
-        self.pendown()
-    def isdown(self):
-        return self._penstate
-
-    def penup(self):
-        self._penstate = False
-    def pu(self):
-        self.penup()
-    def up(self):
-        self.penup()

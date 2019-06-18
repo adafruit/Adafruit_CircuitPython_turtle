@@ -1,0 +1,23 @@
+import board
+from Adafruit_CircuitPython_turtle.adafruit_turtle import *
+
+turtle = turtle(board.DISPLAY)
+starsize = min(board.DISPLAY.width, board.DISPLAY.height) * 0.9  # 90% of screensize
+
+print("Turtle time! Lets draw a star")
+
+turtle.pencolor(Color.BLUE)
+
+turtle.penup()
+turtle.goto(-starsize/2, 0)
+turtle.pendown()
+
+start = turtle.pos()
+while True:
+    turtle.forward(starsize)
+    turtle.left(170)
+    if abs(turtle.pos() - start) < 1:
+        break
+
+while True:
+    pass
