@@ -270,7 +270,17 @@ class turtle:
         return Vec2D(self._x - self._w//2, self._h//2 - self._y)
     position=pos
 
-
+    def clear(self):
+        for w in range(self._w):
+            for h in range(self._h):
+                self._fg_bitmap[w, h] = 0
+        for i,c in enumerate(Color.colors):
+            self._fg_palette[i+1] = c^0xFFFFFF
+        self._display.refresh_soon()
+        for i,c in enumerate(Color.colors):
+            self._fg_palette[i+1] = c
+        self._display.refresh_soon()
+        time.sleep(0.1)
 
 
     def heading(self):
