@@ -1,3 +1,26 @@
+# Based on turtle.py, a Tkinter based turtle graphics module for Python
+# Version 1.1b - 4. 5. 2009
+# Copyright (C) 2006 - 2010  Gregor Lingl
+# email: glingl@aon.at
+#
+# This software is provided 'as-is', without any express or implied
+# warranty.  In no event will the authors be held liable for any damages
+# arising from the use of this software.
+#
+# Permission is granted to anyone to use this software for any purpose,
+# including commercial applications, and to alter it and redistribute it
+# freely, subject to the following restrictions:
+#
+# 1. The origin of this software must not be misrepresented; you must not
+#    claim that you wrote the original software. If you use this software
+#    in a product, an acknowledgment in the product documentation would be
+#    appreciated but is not required.
+# 2. Altered source versions must be plainly marked as such, and must not be
+#    misrepresented as being the original software.
+# 3. This notice may not be removed or altered from any source distribution.
+
+
+
 import displayio
 import board
 import gc
@@ -9,6 +32,49 @@ class color:
     BLACK = 0x0000
     RED =  0xF800
     BLUE = 0x001F
+
+
+class Vec2D(tuple):
+    """A 2 dimensional vector class, used as a helper class
+    for implementing turtle graphics.
+    May be useful for turtle graphics programs also.
+    Derived from tuple, so a vector is a tuple!
+    Provides (for a, b vectors, k number):
+       a+b vector addition
+       a-b vector subtraction
+       a*b inner product
+       k*a and a*k multiplication with scalar
+       |a| absolute value of a
+       a.rotate(angle) rotation
+    """
+    def __init__(cls, x, y):
+        super().__init__((x, y))
+    def __add__(self, other):
+        return Vec2D(self[0]+other[0], self[1]+other[1])
+    def __mul__(self, other):
+        if isinstance(other, Vec2D):
+            return self[0]*other[0]+self[1]*other[1]
+        return Vec2D(self[0]*other, self[1]*other)
+    def __rmul__(self, other):
+        if isinstance(other, int) or isinstance(other, float):
+            return Vec2D(self[0]*other, self[1]*other)
+    def __sub__(self, other):
+        return Vec2D(self[0]-other[0], self[1]-other[1])
+    def __neg__(self):
+        return Vec2D(-self[0], -self[1])
+    def __abs__(self):
+        return (self[0]**2 + self[1]**2)**0.5
+    def rotate(self, angle):
+        """rotate self counterclockwise by angle
+        """
+        perp = Vec2D(-self[1], self[0])
+        angle = angle * math.pi / 180.0
+        c, s = math.cos(angle), math.sin(angle)
+        return Vec2D(self[0]*c+perp[0]*s, self[1]*c+perp[1]*s)
+    def __getnewargs__(self):
+        return (self[0], self[1])
+    def __repr__(self):
+        return "(%.2f,%.2f)" % self
 
 
 class turtle:
@@ -64,7 +130,6 @@ class turtle:
         self._pencolor = None
         self.pencolor(color.BLACK)
 
-        print("Splash!")
         self._display.show(self._splash)
         self._display.refresh_soon()
         gc.collect()
@@ -73,14 +138,13 @@ class turtle:
     def _drawturtle(self):
         self._turtle_sprite.x = self._x - 4
         self._turtle_sprite.y = self._y - 4
-        print("pos (%d, %d)" % (self._x, self._y))
-
+        #print("pos (%d, %d)" % (self._x, self._y))
 
     # Turtle motion
     def forward(self, distance):
         p = self.pos()
-        x1 = p[0] + int(math.sin(math.radians(self._heading))*distance)
-        y1 = p[1] + int(math.cos(math.radians(self._heading))*distance)
+        x1 = p[0] + math.sin(math.radians(self._heading))*distance
+        y1 = p[1] + math.cos(math.radians(self._heading))*distance
         print("* Forward to", x1, y1)
         self.goto(x1, y1)
 
@@ -174,7 +238,7 @@ class turtle:
 
     # Tell turtle's state
     def pos(self):
-        return (self._x - self._w//2, self._h//2 - self._y)
+        return Vec2D(self._x - self._w//2, self._h//2 - self._y)
     def position(self):
         return self.pos()
 
