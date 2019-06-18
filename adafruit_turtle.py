@@ -27,12 +27,14 @@ import gc
 import math
 import time
 
-class color:
-    WHITE = 0xFFFF
+class Color:
+    WHITE = 0xFFFFFF
     BLACK = 0x0000
-    RED =  0xF800
-    BLUE = 0x001F
+    RED =  0xFF0000
+    GREEN =  0x00FF00
+    BLUE = 0x0000FF
 
+    colors = (WHITE, BLACK, RED, GREEN, BLUE)
 
 class Vec2D(tuple):
     """A 2 dimensional vector class, used as a helper class
@@ -93,19 +95,17 @@ class turtle:
 
         self._bg_bitmap = displayio.Bitmap(self._w, self._h, 1)
         self._bg_palette = displayio.Palette(1)
-        self._bg_palette[0] = color.BLACK
+        self._bg_palette[0] = Color.BLACK
         self._bg_sprite = displayio.TileGrid(self._bg_bitmap,
                                             pixel_shader=self._bg_palette,
                                             x=0, y=0)
         self._splash.append(self._bg_sprite)
 
         self._fg_bitmap = displayio.Bitmap(self._w, self._h, 5)
-        self._fg_palette = displayio.Palette(5)
+        self._fg_palette = displayio.Palette(len(Color.colors)+1)
         self._fg_palette.make_transparent(0)
-        self._fg_palette[1] = color.WHITE
-        self._fg_palette[2] = color.BLACK
-        self._fg_palette[3] = color.RED
-        self._fg_palette[4] = color.BLUE
+        for i,c in enumerate(Color.colors):
+            self._fg_palette[i+1] = c
         self._fg_sprite = displayio.TileGrid(self._fg_bitmap,
                                             pixel_shader=self._fg_palette,
                                             x=0, y=0)
@@ -114,7 +114,7 @@ class turtle:
         self._turtle_bitmap = displayio.Bitmap(9, 9, 2)
         self._turtle_palette = displayio.Palette(2)
         self._turtle_palette.make_transparent(0)
-        self._turtle_palette[1] = color.WHITE
+        self._turtle_palette[1] = Color.WHITE
         for i in range(4):
             self._turtle_bitmap[4-i, i] = 1
             self._turtle_bitmap[i, 4+i] = 1
@@ -128,7 +128,7 @@ class turtle:
 
         self._penstate = False
         self._pencolor = None
-        self.pencolor(color.BLACK)
+        self.pencolor(Color.WHITE)
 
         self._display.show(self._splash)
         self._display.refresh_soon()
@@ -145,8 +145,10 @@ class turtle:
         p = self.pos()
         x1 = p[0] + math.sin(math.radians(self._heading))*distance
         y1 = p[1] + math.cos(math.radians(self._heading))*distance
-        print("* Forward to", x1, y1)
         self.goto(x1, y1)
+
+    def backward(self, distance):
+        self.forward(-distance)
 
     def goto(self, x1, y1):
         x1 += self._w//2
@@ -154,6 +156,11 @@ class turtle:
         x0 = self._x
         y0 = self._y
         print("* GoTo from", x0, y0, "to", x1, y1)
+        if not self.isdown():
+            self._x = x1    # woot, we just skip ahead
+            self._y = y1
+            self._drawturtle()
+            return
         steep = abs(y1 - y0) > abs(x1 - x0)
         rev = False
         dx = x1 - x0
@@ -175,17 +182,17 @@ class turtle:
 
         while (not rev and x0 <= x1) or (rev and x1 <= x0):
             if steep:
-                self._fg_bitmap[y0, x0] = 1
+                self._fg_bitmap[y0, x0] = self._pencolor
                 self._x = y0
                 self._y = x0
                 self._drawturtle()
-                time.sleep(0.01)
+                time.sleep(0.003)
             else:
-                self._fg_bitmap[x0, y0] = 1
+                self._fg_bitmap[x0, y0] = self._pencolor
                 self._x = x0
                 self._y = y0
                 self._drawturtle()
-                time.sleep(0.01)
+                time.sleep(0.003)
             err -= dy
             if err < 0:
                 y0 += ystep
@@ -231,10 +238,10 @@ class turtle:
         return self._heading
 
     def pencolor(self, c):
-        #if not c in self.fg_palette:
-        #    raise RuntimeError("Color must be one of the 'color' class items")
+        if not c in Color.colors:
+            raise RuntimeError("Color must be one of the 'color' class items")
         #print(self._fg_palette[0])
-        self._pencolor = c
+        self._pencolor = 1 + Color.colors.index(c)
 
     # Tell turtle's state
     def pos(self):
