@@ -146,11 +146,25 @@ class turtle:
         x1 = p[0] + math.sin(math.radians(self._heading))*distance
         y1 = p[1] + math.cos(math.radians(self._heading))*distance
         self.goto(x1, y1)
+    fd = forward
 
     def backward(self, distance):
         self.forward(-distance)
+    bk = backward
+    back = backward
 
-    def goto(self, x1, y1):
+    def right(self, angle):
+        self._turn(angle)
+    rt = right
+
+    def left(self, angle):
+        self._turn(-angle)
+    lt = left
+
+    def goto(self, x1, y1=None):
+        if y1 is None:
+            y1 = x1[1]
+            x1 = x1[0]
         x1 += self._w//2
         y1 = self._h//2 - y1
         x0 = self._x
@@ -201,6 +215,30 @@ class turtle:
                 x0 -= 1
             else:
                 x0 += 1
+    setpos = goto
+    setposition = goto
+
+    def setx(self, x):
+        self.goto(x, self.pos()[1])
+
+    def sety(self, y):
+        self.goto(self.pos()[0], y)
+
+    def setheading(self, to_angle):
+        self._heading = to_angle
+    seth = setheading
+
+    def home(self):
+        self.setheading(90)
+        self.goto(0,0)
+
+    def circle(radius, extent=None, steps=None):
+        raise NotImplementedError
+
+    def dot(size=None, *color):
+        raise NotImplementedError
+
+    ####################
 
     def mode(self, mode=None):
         if mode == "standard":
@@ -221,17 +259,7 @@ class turtle:
             self._heading += angle
         self._heading %= 360         # wrap around
 
-    def left(self, angle):
-        self._turn(-angle)
 
-    def lt(self, angle):
-        self.left(angle)
-
-    def right(self, angle):
-        self._turn(angle)
-
-    def rt(self, angle):
-        self.right(angle)
 
 
     def heading(self):
