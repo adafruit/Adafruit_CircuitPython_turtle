@@ -200,13 +200,19 @@ class turtle:
 
         while (not rev and x0 <= x1) or (rev and x1 <= x0):
             if steep:
-                self._fg_bitmap[int(y0), int(x0)] = self._pencolor
+                try:
+                    self._fg_bitmap[int(y0), int(x0)] = self._pencolor
+                except IndexError:
+                    pass
                 self._x = y0
                 self._y = x0
                 self._drawturtle()
                 time.sleep(0.003)
             else:
-                self._fg_bitmap[int(x0), int(y0)] = self._pencolor
+                try:
+                    self._fg_bitmap[int(x0), int(y0)] = self._pencolor
+                except IndexError:
+                    pass
                 self._x = x0
                 self._y = y0
                 self._drawturtle()
