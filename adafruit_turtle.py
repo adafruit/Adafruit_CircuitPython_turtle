@@ -78,8 +78,10 @@ class turtle:
 
     # Turtle motion
     def forward(self, distance):
-        x1 = int(self._x + math.sin(math.radians(self._heading))*distance)
-        y1 = int(self._y + math.cos(math.radians(self._heading))*distance)
+        p = self.pos()
+        x1 = p[0] + int(math.sin(math.radians(self._heading))*distance)
+        y1 = p[1] + int(math.cos(math.radians(self._heading))*distance)
+        print("* Forward to", x1, y1)
         self.goto(x1, y1)
 
     def goto(self, x1, y1):
@@ -87,7 +89,7 @@ class turtle:
         y1 = self._h//2 - y1
         x0 = self._x
         y0 = self._y
-        print("* Forward from", x0, y0, "to", x1, y1)
+        print("* GoTo from", x0, y0, "to", x1, y1)
         steep = abs(y1 - y0) > abs(x1 - x0)
         rev = False
         dx = x1 - x0
@@ -149,13 +151,13 @@ class turtle:
         self._heading %= 360         # wrap around
 
     def left(self, angle):
-        self._turn(angle)
+        self._turn(-angle)
 
     def lt(self, angle):
         self.left(angle)
 
     def right(self, angle):
-        self._turn(-angle)
+        self._turn(angle)
 
     def rt(self, angle):
         self.right(angle)
@@ -172,7 +174,7 @@ class turtle:
 
     # Tell turtle's state
     def pos(self):
-        return (self._x - self._w//2, self._y - self._h//2)
+        return (self._x - self._w//2, self._h//2 - self._y)
     def position(self):
         return self.pos()
 
