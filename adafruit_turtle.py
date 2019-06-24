@@ -59,6 +59,7 @@ __version__ = "0.0.0-auto.0"
 __repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_turtle.git"
 
 class Color:
+    """Standard colors"""
     WHITE = 0xFFFFFF
     BLACK = 0x000000
     RED = 0xFF0000
@@ -84,7 +85,7 @@ class Vec2D(tuple):
        |a| absolute value of a
        a.rotate(angle) rotation
     """
-    def __init__(cls, x, y):
+    def __init__(self, x, y):
         super().__init__((x, y))
 
     def __add__(self, other):
@@ -96,8 +97,9 @@ class Vec2D(tuple):
         return Vec2D(self[0] * other, self[1] * other)
 
     def __rmul__(self, other):
-        if isinstance(other, int) or isinstance(other, float):
+        if isinstance(other, (float, int)):
             return Vec2D(self[0] * other, self[1] * other)
+        return None
 
     def __sub__(self, other):
         return Vec2D(self[0] - other[0], self[1] - other[1])
@@ -127,6 +129,7 @@ class Vec2D(tuple):
 
 
 class turtle:
+    """A Turtle that can be given commands to draw."""
 
     def __init__(self, display=board.DISPLAY):
         self._logger = logging.getLogger("Turtle")
@@ -153,7 +156,7 @@ class turtle:
         self._fg_bitmap = displayio.Bitmap(self._w, self._h, 5)
         self._fg_palette = displayio.Palette(len(Color.colors) + 1)
         self._fg_palette.make_transparent(0)
-        for i,c in enumerate(Color.colors):
+        for i, c in enumerate(Color.colors):
             self._fg_palette[i + 1] = c
         self._fg_sprite = displayio.TileGrid(self._fg_bitmap,
                                              pixel_shader=self._fg_palette,
@@ -248,7 +251,8 @@ class turtle:
     def goto(self, x1, y1=None):
         """If y1 is None, x1 must be a pair of coordinates or an (x, y) tuple
 
-        Move turtle to an absolute position. If the pen is down, draw line. Do not change the turtle’s orientation.
+        Move turtle to an absolute position. If the pen is down, draw line.
+        Does not change the turtle’s orientation.
 
         :param x1: a number or a pair of numbers
         :param y1: a number or None
@@ -357,7 +361,7 @@ class turtle:
         (which depends on the mode, see mode()).
         """
         self.setheading(90)
-        self.goto(0,0)
+        self.goto(0, 0)
 
     def circle(self, radius, extent=None, steps=None):
         """Draw a circle with given radius. The center is radius units left of
@@ -452,7 +456,7 @@ class turtle:
     def pos(self):
         """Return the turtle’s current location (x,y) (as a Vec2D vector)."""
         return Vec2D(self._x - self._w // 2, self._h // 2 - self._y)
-    position=pos
+    position = pos
 
     def clear(self):
         """Delete the turtle’s drawings from the screen. Do not move turtle.
