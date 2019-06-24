@@ -56,30 +56,39 @@ class Vec2D(tuple):
     """
     def __init__(cls, x, y):
         super().__init__((x, y))
+
     def __add__(self, other):
-        return Vec2D(self[0]+other[0], self[1]+other[1])
+        return Vec2D(self[0] + other[0], self[1] + other[1])
+
     def __mul__(self, other):
         if isinstance(other, Vec2D):
-            return self[0]*other[0]+self[1]*other[1]
-        return Vec2D(self[0]*other, self[1]*other)
+            return self[0] * other[0]+self[1] * other[1]
+        return Vec2D(self[0] * other, self[1] * other)
+
     def __rmul__(self, other):
         if isinstance(other, int) or isinstance(other, float):
-            return Vec2D(self[0]*other, self[1]*other)
+            return Vec2D(self[0] * other, self[1] * other)
+
     def __sub__(self, other):
-        return Vec2D(self[0]-other[0], self[1]-other[1])
+        return Vec2D(self[0] - other[0], self[1] - other[1])
+
     def __neg__(self):
         return Vec2D(-self[0], -self[1])
+
     def __abs__(self):
         return (self[0]**2 + self[1]**2)**0.5
+
     def rotate(self, angle):
         """rotate self counterclockwise by angle
         """
         perp = Vec2D(-self[1], self[0])
         angle = angle * math.pi / 180.0
         c, s = math.cos(angle), math.sin(angle)
-        return Vec2D(self[0]*c+perp[0]*s, self[1]*c+perp[1]*s)
+        return Vec2D(self[0] * c + perp[0] * s, self[1] * c + perp[1] * s)
+
     def __getnewargs__(self):
         return (self[0], self[1])
+
     def __repr__(self):
         return "(%.2f,%.2f)" % self
 
@@ -92,8 +101,8 @@ class turtle:
         self._display = display
         self._w = self._display.width
         self._h = self._display.height
-        self._x = self._w//2
-        self._y = self._h//2
+        self._x = self._w // 2
+        self._y = self._h // 2
         self._speed = 6
         self._heading = 90
         self._logomode = False
@@ -109,10 +118,10 @@ class turtle:
         self._splash.append(self._bg_sprite)
 
         self._fg_bitmap = displayio.Bitmap(self._w, self._h, 5)
-        self._fg_palette = displayio.Palette(len(Color.colors)+1)
+        self._fg_palette = displayio.Palette(len(Color.colors) + 1)
         self._fg_palette.make_transparent(0)
         for i,c in enumerate(Color.colors):
-            self._fg_palette[i+1] = c
+            self._fg_palette[i + 1] = c
         self._fg_sprite = displayio.TileGrid(self._fg_bitmap,
                                             pixel_shader=self._fg_palette,
                                             x=0, y=0)
@@ -123,10 +132,10 @@ class turtle:
         self._turtle_palette.make_transparent(0)
         self._turtle_palette[1] = Color.WHITE
         for i in range(4):
-            self._turtle_bitmap[4-i, i] = 1
-            self._turtle_bitmap[i, 4+i] = 1
-            self._turtle_bitmap[4+i, 7-i] = 1
-            self._turtle_bitmap[4+i, i] = 1
+            self._turtle_bitmap[4 - i, i] = 1
+            self._turtle_bitmap[i, 4 + i] = 1
+            self._turtle_bitmap[4 + i, 7 - i] = 1
+            self._turtle_bitmap[4 + i, i] = 1
         self._turtle_sprite = displayio.TileGrid(self._turtle_bitmap,
                                             pixel_shader=self._turtle_palette,
                                             x=-100, y=-100)
@@ -150,8 +159,8 @@ class turtle:
     # Turtle motion
     def forward(self, distance):
         p = self.pos()
-        x1 = p[0] + math.sin(math.radians(self._heading))*distance
-        y1 = p[1] + math.cos(math.radians(self._heading))*distance
+        x1 = p[0] + math.sin(math.radians(self._heading)) * distance
+        y1 = p[1] + math.cos(math.radians(self._heading)) * distance
         self.goto(x1, y1)
     fd = forward
 
@@ -172,8 +181,8 @@ class turtle:
         if y1 is None:
             y1 = x1[1]
             x1 = x1[0]
-        x1 += self._w//2
-        y1 = self._h//2 - y1
+        x1 += self._w // 2
+        y1 = self._h // 2 - y1
         x0 = self._x
         y0 = self._y
         self._logger.debug("* GoTo from (%d, %d) to (%d, %d)", x0, y0, x1, y1)
@@ -270,25 +279,23 @@ class turtle:
     ####################
     # Tell turtle's state
     def pos(self):
-        return Vec2D(self._x - self._w//2, self._h//2 - self._y)
+        return Vec2D(self._x - self._w // 2, self._h // 2 - self._y)
     position=pos
 
     def clear(self):
         for w in range(self._w):
             for h in range(self._h):
                 self._fg_bitmap[w, h] = 0
-        for i,c in enumerate(Color.colors):
-            self._fg_palette[i+1] = c^0xFFFFFF
+        for i, c in enumerate(Color.colors):
+            self._fg_palette[i + 1] = c ^ 0xFFFFFF
         self._display.refresh_soon()
-        for i,c in enumerate(Color.colors):
-            self._fg_palette[i+1] = c
+        for i, c in enumerate(Color.colors):
+            self._fg_palette[i + 1] = c
         self._display.refresh_soon()
         time.sleep(0.1)
 
-
     def heading(self):
         return self._heading
-
 
     # Pen control
     def pendown(self):
@@ -309,8 +316,6 @@ class turtle:
             raise RuntimeError("Color must be one of the 'color' class items")
         self._pencolor = 1 + Color.colors.index(c)
 
-
-
     def mode(self, mode=None):
         if mode == "standard":
             self._logomode = False
@@ -323,6 +328,7 @@ class turtle:
                 return "standard"
         else:
             raise RuntimeError("Mode must be 'logo' or 'standard!'")
+
     def _turn(self, angle):
         if self._logomode:
             self._heading -= angle
