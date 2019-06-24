@@ -20,7 +20,10 @@ extensions = [
 # Uncomment the below if you use native CircuitPython modules such as
 # digitalio, micropython and busio. List the modules you use. Without it, the
 # autodoc module docs will fail to generate with a warning.
-autodoc_mock_imports = ["displayio", "adafruit_logging"]
+autodoc_mock_imports = ["rtc", "supervisor", "pulseio", "audioio", "displayio", "neopixel",
+                        "microcontroller", "adafruit_touchscreen", "adafruit_bitmap_font",
+                        "adafruit_display_text", "adafruit_esp32spi", "secrets",
+                        "adafruit_sdcard", "storage", "adafruit_io", "adafruit_button"]
 
 
 intersphinx_mapping = {'python': ('https://docs.python.org/3.4', None),'BusDevice': ('https://circuitpython.readthedocs.io/projects/busdevice/en/latest/', None),'CircuitPython': ('https://circuitpython.readthedocs.io/en/latest/', None)}
@@ -35,8 +38,8 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'Adafruit turtle Library'
-copyright = u'2019 LadyAda and Dave Astels'
-author = u'LadyAda and Dave Astels'
+copyright = u'2019 Adafruit'
+author = u'Adafruit'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
