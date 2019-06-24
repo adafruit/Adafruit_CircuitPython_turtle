@@ -1,5 +1,5 @@
 import board
-from Adafruit_CircuitPython_turtle.adafruit_turtle import *
+from adafruit_turtle import *
 
 turtle = turtle(board.DISPLAY)
 starsize = min(board.DISPLAY.width, board.DISPLAY.height) * 0.9  # 90% of screensize

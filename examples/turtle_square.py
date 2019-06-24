@@ -1,10 +1,10 @@
 import board
-from Adafruit_CircuitPython_turtle.adafruit_turtle import *
+from adafruit_turtle import *
 
 turtle = turtle(board.DISPLAY)
 print("Turtle time! Lets draw a simple square")
 
-turtle.pencolor(color.WHITE)
+turtle.pencolor(Color.WHITE)
 print("Position:", turtle.pos())
 print("Heading:", turtle.heading())
 
