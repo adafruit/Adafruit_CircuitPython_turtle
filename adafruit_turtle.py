@@ -38,9 +38,6 @@ Implementation Notes
 
 **Hardware:**
 
-.. todo:: Add links to any specific hardware product page(s), or category page(s). Use unordered list & hyperlink rST
-   inline format: "* `Link Text <url>`_"
-
 **Software and Dependencies:**
 
 * Adafruit CircuitPython firmware for the supported boards:
@@ -48,6 +45,8 @@ Implementation Notes
 
 * Adafruit's Bus Device library: https://github.com/adafruit/Adafruit_CircuitPython_BusDevice
 """
+
+#pylint:disable=too-many-public-methods,invalid-name,too-many-instance-attributes,too-few-public-methods
 
 import displayio
 import board
@@ -62,10 +61,10 @@ __repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_turtle.git"
 class Color:
     WHITE = 0xFFFFFF
     BLACK = 0x0000
-    RED =  0xFF0000
+    RED = 0xFF0000
     ORANGE = 0xFFA500
     YELLOW = 0xFFFF00
-    GREEN =  0x00FF00
+    GREEN = 0x00FF00
     BLUE = 0x0000FF
     PURPLE = 0x800080
     PINK = 0xFFC0CB
@@ -144,8 +143,8 @@ class turtle:
         self._bg_palette = displayio.Palette(1)
         self._bg_palette[0] = Color.BLACK
         self._bg_sprite = displayio.TileGrid(self._bg_bitmap,
-                                            pixel_shader=self._bg_palette,
-                                            x=0, y=0)
+                                             pixel_shader=self._bg_palette,
+                                             x=0, y=0)
         self._splash.append(self._bg_sprite)
 
         self._fg_bitmap = displayio.Bitmap(self._w, self._h, 5)
@@ -154,8 +153,8 @@ class turtle:
         for i,c in enumerate(Color.colors):
             self._fg_palette[i + 1] = c
         self._fg_sprite = displayio.TileGrid(self._fg_bitmap,
-                                            pixel_shader=self._fg_palette,
-                                            x=0, y=0)
+                                             pixel_shader=self._fg_palette,
+                                             x=0, y=0)
         self._splash.append(self._fg_sprite)
 
         self._turtle_bitmap = displayio.Bitmap(9, 9, 2)
@@ -168,8 +167,8 @@ class turtle:
             self._turtle_bitmap[4 + i, 7 - i] = 1
             self._turtle_bitmap[4 + i, i] = 1
         self._turtle_sprite = displayio.TileGrid(self._turtle_bitmap,
-                                            pixel_shader=self._turtle_palette,
-                                            x=-100, y=-100)
+                                                 pixel_shader=self._turtle_palette,
+                                                 x=-100, y=-100)
         self._drawturtle()
         self._splash.append(self._turtle_sprite)
 
@@ -344,7 +343,7 @@ class turtle:
 
     def pencolor(self, c):
         if not c in Color.colors:
-            raise RuntimeError("Color must be one of the 'color' class items")
+            raise RuntimeError("Color must be one of the 'Color' class items")
         self._pencolor = 1 + Color.colors.index(c)
 
     def mode(self, mode=None):
@@ -355,10 +354,10 @@ class turtle:
         elif mode is None:
             if self._logomode:
                 return "logo"
-            else:
-                return "standard"
+            return "standard"
         else:
             raise RuntimeError("Mode must be 'logo' or 'standard!'")
+        return ""
 
     def _turn(self, angle):
         if self._logomode:
