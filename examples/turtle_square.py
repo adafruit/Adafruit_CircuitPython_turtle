@@ -1,5 +1,5 @@
 import board
-from adafruit_turtle import *
+from adafruit_turtle import Color, turtle
 
 turtle = turtle(board.DISPLAY)
 print("Turtle time! Lets draw a simple square")

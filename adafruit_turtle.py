@@ -48,11 +48,11 @@ Implementation Notes
 
 #pylint:disable=too-many-public-methods,invalid-name,too-many-instance-attributes,too-few-public-methods
 
-import displayio
-import board
 import gc
 import math
 import time
+import displayio
+import board
 import adafruit_logging as logging
 
 __version__ = "0.0.0-auto.0"
@@ -207,6 +207,7 @@ class turtle:
         self._turn(-angle)
     lt = left
 
+    #pylint:disable=too-many-branches,too-many-statements
     def goto(self, x1, y1=None):
         if y1 is None:
             y1 = x1[1]
@@ -287,6 +288,7 @@ class turtle:
     def circle(self, radius, extent=None, steps=None):
         raise NotImplementedError
 
+#pylint:disable=keyword-arg-before-vararg
     def dot(self, size=None, *color):
         raise NotImplementedError
 
