@@ -26,6 +26,7 @@ import board
 import gc
 import math
 import time
+import adafruit_logging as logging
 
 class Color:
     WHITE = 0xFFFFFF
@@ -86,6 +87,8 @@ class Vec2D(tuple):
 class turtle:
 
     def __init__(self, display=board.DISPLAY):
+        self._logger = logging.getLogger("Turtle")
+        self._logger.setLevel(logging.DEBUG)
         self._display = display
         self._w = self._display.width
         self._h = self._display.height
@@ -142,7 +145,7 @@ class turtle:
     def _drawturtle(self):
         self._turtle_sprite.x = int(self._x - 4)
         self._turtle_sprite.y = int(self._y - 4)
-        #print("pos (%d, %d)" % (self._x, self._y))
+        #self._logger.debug("pos (%d, %d)", self._x, self._y)
 
     # Turtle motion
     def forward(self, distance):
@@ -173,7 +176,7 @@ class turtle:
         y1 = self._h//2 - y1
         x0 = self._x
         y0 = self._y
-        print("* GoTo from", x0, y0, "to", x1, y1)
+        self._logger.debug("* GoTo from (%d, %d) to (%d, %d)", x0, y0, x1, y1)
         if not self.isdown():
             self._x = x1    # woot, we just skip ahead
             self._y = y1
