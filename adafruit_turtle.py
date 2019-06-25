@@ -58,7 +58,7 @@ import adafruit_logging as logging
 __version__ = "0.0.0-auto.0"
 __repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_turtle.git"
 
-class Color:
+class Color(object):
     """Standard colors"""
     WHITE = 0xFFFFFF
     BLACK = 0x000000
@@ -71,6 +71,10 @@ class Color:
     PINK = 0xFFC0CB
 
     colors = (WHITE, BLACK, RED, ORANGE, YELLOW, GREEN, BLUE, PURPLE, PINK)
+
+    def __init__(self):
+        pass
+
 
 class Vec2D(tuple):
     """A 2 dimensional vector class, used as a helper class
@@ -86,7 +90,7 @@ class Vec2D(tuple):
     #     |a| absolute value of a
     #     a.rotate(angle) rotation
     def __init__(self, x, y):
-        super().__init__((x, y))
+        super(Vec2D, self).__init__((x, y))
 
     def __add__(self, other):
         return Vec2D(self[0] + other[0], self[1] + other[1])
@@ -128,7 +132,7 @@ class Vec2D(tuple):
         return "(%.2f,%.2f)" % self
 
 
-class turtle:
+class turtle(object):
     """A Turtle that can be given commands to draw."""
 
     def __init__(self, display=board.DISPLAY):
