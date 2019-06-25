@@ -210,7 +210,7 @@ class turtle(object):
 
     def backward(self, distance):
         """Move the turtle backward by distance, opposite to the direction the turtle is headed.
-        Does not change the turtle’s heading.
+        Does not change the turtle's heading.
 
         :param distance: how far to move (integer or float)
         """
@@ -220,7 +220,7 @@ class turtle(object):
     back = backward
 
     def degrees(self, fullcircle=360):
-        """Set angle measurement units, i.e. set number of “degrees” for a full circle.
+        """Set angle measurement units, i.e. set number of "degrees" for a full circle.
         Default value is 360 degrees.
 
         :param fullcircle: the number of degrees in a full circle
@@ -256,7 +256,7 @@ class turtle(object):
         """If y1 is None, x1 must be a pair of coordinates or an (x, y) tuple
 
         Move turtle to an absolute position. If the pen is down, draw line.
-        Does not change the turtle’s orientation.
+        Does not change the turtle's orientation.
 
         :param x1: a number or a pair of numbers
         :param y1: a number or None
@@ -324,7 +324,7 @@ class turtle(object):
     setposition = goto
 
     def setx(self, x):
-        """Set the turtle’s first coordinate to x, leave second coordinate
+        """Set the turtle's first coordinate to x, leave second coordinate
         unchanged.
 
         :param x: new value of the turtle's x coordinate (a number)
@@ -333,7 +333,7 @@ class turtle(object):
         self.goto(x, self.pos()[1])
 
     def sety(self, y):
-        """Set the turtle’s second coordinate to y, leave first coordinate
+        """Set the turtle's second coordinate to y, leave first coordinate
         unchanged.
 
         :param y: new value of the turtle's y coordinate (a number)
@@ -359,7 +359,7 @@ class turtle(object):
     seth = setheading
 
     def home(self):
-        """Move turtle to the origin – coordinates (0,0) – and set its heading to
+        """Move turtle to the origin - coordinates (0,0) - and set its heading to
         its start-orientation
         (which depends on the mode, see mode()).
         """
@@ -368,7 +368,7 @@ class turtle(object):
 
     def circle(self, radius, extent=None, steps=None):
         """Draw a circle with given radius. The center is radius units left of
-        the turtle; extent – an angle – determines which part of the circle is
+        the turtle; extent - an angle - determines which part of the circle is
         drawn. If extent is not given, draw the entire circle. If extent is not
         a full circle, one endpoint of the arc is the current pen position.
         Draw the arc in counterclockwise direction if radius is positive,
@@ -414,7 +414,7 @@ class turtle(object):
         raise NotImplementedError
 
     def clearstamps(self, n=None):
-        """Delete all or first/last n of turtle’s stamps. If n is None, delete
+        """Delete all or first/last n of turtle's stamps. If n is None, delete
         all stamps, if n > 0 delete first n stamps, else if n < 0 delete last
         n stamps.
 
@@ -430,17 +430,17 @@ class turtle(object):
         raise NotImplementedError
 
     def speed(self, speed=None):
-        """Set the turtle’s speed to an integer value in the range 0..10. If no
+        """Set the turtle's speed to an integer value in the range 0..10. If no
         argument is given, return current speed.
 
         If input is a number greater than 10 or smaller than 0.5, speed is set
         to 0. Speedstrings are mapped to speedvalues as follows:
 
-        “fastest”: 0
-        “fast”: 10
-        “normal”: 6
-        “slow”: 3
-        “slowest”: 1
+        "fastest": 0
+        "fast": 10
+        "normal": 6
+        "slow": 3
+        "slowest": 1
 
         Speeds from 1 to 10 enforce increasingly faster animation of line
         drawing and turtle turning.
@@ -457,12 +457,12 @@ class turtle(object):
     ####################
     # Tell turtle's state
     def pos(self):
-        """Return the turtle’s current location (x,y) (as a Vec2D vector)."""
+        """Return the turtle's current location (x,y) (as a Vec2D vector)."""
         return Vec2D(self._x - self._w // 2, self._h // 2 - self._y)
     position = pos
 
     def clear(self):
-        """Delete the turtle’s drawings from the screen. Do not move turtle.
+        """Delete the turtle's drawings from the screen. Do not move turtle.
         State and position of the turtle as well as drawings of other turtles
         are not affected.
         """
@@ -478,24 +478,24 @@ class turtle(object):
         time.sleep(0.1)
 
     def heading(self):
-        """Return the turtle’s current heading (value depends on the turtle mode, see mode())."""
+        """Return the turtle's current heading (value depends on the turtle mode, see mode())."""
         return self._heading
 
     # Pen control
     def pendown(self):
-        """Pull the pen down – drawing when moving."""
+        """Pull the pen down - drawing when moving."""
         self._penstate = True
     pd = pendown
     down = pendown
 
     def penup(self):
-        """Pull the pen up – no drawing when moving."""
+        """Pull the pen up - no drawing when moving."""
         self._penstate = False
     pu = penup
     up = penup
 
     def isdown(self):
-        """Return True if pen is down, False if it’s up."""
+        """Return True if pen is down, False if it's up."""
         return self._penstate
 
     def pencolor(self, c=None):
@@ -514,13 +514,13 @@ class turtle(object):
 
     def mode(self, mode=None):
         """
-        Set turtle mode (“standard”, “logo” or “world”) and perform reset.
+        Set turtle mode ("standard", "logo" or "world") and perform reset.
         If mode is not given, current mode is returned.
 
-        Mode “standard” is compatible with old turtle.
-        Mode “logo” is compatible with most Logo turtle graphics.
+        Mode "standard" is compatible with old turtle.
+        Mode "logo" is compatible with most Logo turtle graphics.
 
-        :param mode: one of the strings “standard” or “logo"
+        :param mode: one of the strings "standard" or "logo"
         """
         if mode == "standard":
             self._logomode = False
