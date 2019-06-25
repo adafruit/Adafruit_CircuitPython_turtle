@@ -77,15 +77,14 @@ class Vec2D(tuple):
     for implementing turtle graphics.
     May be useful for turtle graphics programs also.
     Derived from tuple, so a vector is a tuple!
-
-    Provides (for a, b vectors, k number):
-        a+b vector addition
-        a-b vector subtraction
-        a*b inner product
-        k*a and a*k multiplication with scalar
-        |a| absolute value of a
-        a.rotate(angle) rotation
     """
+    # Provides (for a, b vectors, k number):
+    #     a+b vector addition
+    #     a-b vector subtraction
+    #     a*b inner product
+    #     k*a and a*k multiplication with scalar
+    #     |a| absolute value of a
+    #     a.rotate(angle) rotation
     def __init__(self, x, y):
         super().__init__((x, y))
 
