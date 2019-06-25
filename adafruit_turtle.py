@@ -3,37 +3,69 @@
 # Copyright (C) 2006 - 2010  Gregor Lingl
 # email: glingl@aon.at
 #
-# This software is provided 'as-is', without any express or implied
-# warranty.  In no event will the authors be held liable for any damages
-# arising from the use of this software.
+# The MIT License (MIT)
 #
-# Permission is granted to anyone to use this software for any purpose,
-# including commercial applications, and to alter it and redistribute it
-# freely, subject to the following restrictions:
+# Copyright (c) 2019 LadyAda and Dave Astels for Adafruit Industries
 #
-# 1. The origin of this software must not be misrepresented; you must not
-#    claim that you wrote the original software. If you use this software
-#    in a product, an acknowledgment in the product documentation would be
-#    appreciated but is not required.
-# 2. Altered source versions must be plainly marked as such, and must not be
-#    misrepresented as being the original software.
-# 3. This notice may not be removed or altered from any source distribution.
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+# THE SOFTWARE.
+"""
+`adafruit_turtle`
+================================================================================
+
+Turtle graphics library for CircuitPython and displayio
 
 
+* Author(s): LadyAda and Dave Astels
 
-import displayio
-import board
+Implementation Notes
+--------------------
+
+**Hardware:**
+
+**Software and Dependencies:**
+
+* Adafruit CircuitPython firmware for the supported boards:
+  https://github.com/adafruit/circuitpython/releases
+
+* Adafruit's Bus Device library: https://github.com/adafruit/Adafruit_CircuitPython_BusDevice
+"""
+
+#pylint:disable=too-many-public-methods,invalid-name,too-many-instance-attributes,too-few-public-methods
+
 import gc
 import math
 import time
+import board
+import displayio
+import adafruit_logging as logging
+
+__version__ = "0.0.0-auto.0"
+__repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_turtle.git"
 
 class Color:
+    """Standard colors"""
     WHITE = 0xFFFFFF
-    BLACK = 0x0000
-    RED =  0xFF0000
+    BLACK = 0x000000
+    RED = 0xFF0000
     ORANGE = 0xFFA500
     YELLOW = 0xFFFF00
-    GREEN =  0x00FF00
+    GREEN = 0x00FF00
     BLUE = 0x0000FF
     PURPLE = 0x800080
     PINK = 0xFFC0CB
@@ -45,52 +77,68 @@ class Vec2D(tuple):
     for implementing turtle graphics.
     May be useful for turtle graphics programs also.
     Derived from tuple, so a vector is a tuple!
-    Provides (for a, b vectors, k number):
-       a+b vector addition
-       a-b vector subtraction
-       a*b inner product
-       k*a and a*k multiplication with scalar
-       |a| absolute value of a
-       a.rotate(angle) rotation
     """
-    def __init__(cls, x, y):
+    # Provides (for a, b vectors, k number):
+    #     a+b vector addition
+    #     a-b vector subtraction
+    #     a*b inner product
+    #     k*a and a*k multiplication with scalar
+    #     |a| absolute value of a
+    #     a.rotate(angle) rotation
+    def __init__(self, x, y):
         super().__init__((x, y))
+
     def __add__(self, other):
-        return Vec2D(self[0]+other[0], self[1]+other[1])
+        return Vec2D(self[0] + other[0], self[1] + other[1])
+
     def __mul__(self, other):
         if isinstance(other, Vec2D):
-            return self[0]*other[0]+self[1]*other[1]
-        return Vec2D(self[0]*other, self[1]*other)
+            return self[0] * other[0]+self[1] * other[1]
+        return Vec2D(self[0] * other, self[1] * other)
+
     def __rmul__(self, other):
-        if isinstance(other, int) or isinstance(other, float):
-            return Vec2D(self[0]*other, self[1]*other)
+        if isinstance(other, (float, int)):
+            return Vec2D(self[0] * other, self[1] * other)
+        return None
+
     def __sub__(self, other):
-        return Vec2D(self[0]-other[0], self[1]-other[1])
+        return Vec2D(self[0] - other[0], self[1] - other[1])
+
     def __neg__(self):
         return Vec2D(-self[0], -self[1])
+
     def __abs__(self):
         return (self[0]**2 + self[1]**2)**0.5
+
     def rotate(self, angle):
-        """rotate self counterclockwise by angle
+        """Rotate self counterclockwise by angle.
+
+        :param angle: how much to rotate
+
         """
         perp = Vec2D(-self[1], self[0])
         angle = angle * math.pi / 180.0
         c, s = math.cos(angle), math.sin(angle)
-        return Vec2D(self[0]*c+perp[0]*s, self[1]*c+perp[1]*s)
+        return Vec2D(self[0] * c + perp[0] * s, self[1] * c + perp[1] * s)
+
     def __getnewargs__(self):
         return (self[0], self[1])
+
     def __repr__(self):
         return "(%.2f,%.2f)" % self
 
 
 class turtle:
+    """A Turtle that can be given commands to draw."""
 
     def __init__(self, display=board.DISPLAY):
+        self._logger = logging.getLogger("Turtle")
+        self._logger.setLevel(logging.DEBUG)
         self._display = display
         self._w = self._display.width
         self._h = self._display.height
-        self._x = self._w//2
-        self._y = self._h//2
+        self._x = self._w // 2
+        self._y = self._h // 2
         self._speed = 6
         self._heading = 90
         self._logomode = False
@@ -101,18 +149,18 @@ class turtle:
         self._bg_palette = displayio.Palette(1)
         self._bg_palette[0] = Color.BLACK
         self._bg_sprite = displayio.TileGrid(self._bg_bitmap,
-                                            pixel_shader=self._bg_palette,
-                                            x=0, y=0)
+                                             pixel_shader=self._bg_palette,
+                                             x=0, y=0)
         self._splash.append(self._bg_sprite)
 
         self._fg_bitmap = displayio.Bitmap(self._w, self._h, 5)
-        self._fg_palette = displayio.Palette(len(Color.colors)+1)
+        self._fg_palette = displayio.Palette(len(Color.colors) + 1)
         self._fg_palette.make_transparent(0)
-        for i,c in enumerate(Color.colors):
-            self._fg_palette[i+1] = c
+        for i, c in enumerate(Color.colors):
+            self._fg_palette[i + 1] = c
         self._fg_sprite = displayio.TileGrid(self._fg_bitmap,
-                                            pixel_shader=self._fg_palette,
-                                            x=0, y=0)
+                                             pixel_shader=self._fg_palette,
+                                             x=0, y=0)
         self._splash.append(self._fg_sprite)
 
         self._turtle_bitmap = displayio.Bitmap(9, 9, 2)
@@ -120,13 +168,13 @@ class turtle:
         self._turtle_palette.make_transparent(0)
         self._turtle_palette[1] = Color.WHITE
         for i in range(4):
-            self._turtle_bitmap[4-i, i] = 1
-            self._turtle_bitmap[i, 4+i] = 1
-            self._turtle_bitmap[4+i, 7-i] = 1
-            self._turtle_bitmap[4+i, i] = 1
+            self._turtle_bitmap[4 - i, i] = 1
+            self._turtle_bitmap[i, 4 + i] = 1
+            self._turtle_bitmap[4 + i, 7 - i] = 1
+            self._turtle_bitmap[4 + i, i] = 1
         self._turtle_sprite = displayio.TileGrid(self._turtle_bitmap,
-                                            pixel_shader=self._turtle_palette,
-                                            x=-100, y=-100)
+                                                 pixel_shader=self._turtle_palette,
+                                                 x=-100, y=-100)
         self._drawturtle()
         self._splash.append(self._turtle_sprite)
 
@@ -142,38 +190,81 @@ class turtle:
     def _drawturtle(self):
         self._turtle_sprite.x = int(self._x - 4)
         self._turtle_sprite.y = int(self._y - 4)
-        #print("pos (%d, %d)" % (self._x, self._y))
+        #self._logger.debug("pos (%d, %d)", self._x, self._y)
 
     # Turtle motion
     def forward(self, distance):
+        """Move the turtle forward by the specified distance, in the direction the turtle is headed.
+
+        :param distance: how far to move (integer or float)
+        """
         p = self.pos()
-        x1 = p[0] + math.sin(math.radians(self._heading))*distance
-        y1 = p[1] + math.cos(math.radians(self._heading))*distance
+        x1 = p[0] + math.sin(math.radians(self._heading)) * distance
+        y1 = p[1] + math.cos(math.radians(self._heading)) * distance
         self.goto(x1, y1)
     fd = forward
 
     def backward(self, distance):
+        """Move the turtle backward by distance, opposite to the direction the turtle is headed.
+        Does not change the turtle’s heading.
+
+        :param distance: how far to move (integer or float)
+        """
+
         self.forward(-distance)
     bk = backward
     back = backward
 
+    def degrees(self, fullcircle=360):
+        """Set angle measurement units, i.e. set number of “degrees” for a full circle.
+        Default value is 360 degrees.
+
+        :param fullcircle: the number of degrees in a full circle
+        """
+        raise NotImplementedError
+
+    def radians(self):
+        """Set the angle measurement units to radians. Equivalent to degrees(2*math.pi)."""
+        raise NotImplementedError
+
     def right(self, angle):
+        """Turn turtle right by angle units. (Units are by default degrees,
+        but can be set via the degrees() and radians() functions.)
+        Angle orientation depends on the turtle mode, see mode().
+
+        :param angle: how much to rotate to the right (integer or float)
+        """
         self._turn(angle)
     rt = right
 
     def left(self, angle):
+        """Turn turtle left by angle units. (Units are by default degrees,
+        but can be set via the degrees() and radians() functions.)
+        Angle orientation depends on the turtle mode, see mode().
+
+        :param angle: how much to rotate to the left (integer or float)
+        """
         self._turn(-angle)
     lt = left
 
+    #pylint:disable=too-many-branches,too-many-statements
     def goto(self, x1, y1=None):
+        """If y1 is None, x1 must be a pair of coordinates or an (x, y) tuple
+
+        Move turtle to an absolute position. If the pen is down, draw line.
+        Does not change the turtle’s orientation.
+
+        :param x1: a number or a pair of numbers
+        :param y1: a number or None
+        """
         if y1 is None:
             y1 = x1[1]
             x1 = x1[0]
-        x1 += self._w//2
-        y1 = self._h//2 - y1
+        x1 += self._w // 2
+        y1 = self._h // 2 - y1
         x0 = self._x
         y0 = self._y
-        print("* GoTo from", x0, y0, "to", x1, y1)
+        self._logger.debug("* GoTo from (%d, %d) to (%d, %d)", x0, y0, x1, y1)
         if not self.isdown():
             self._x = x1    # woot, we just skip ahead
             self._y = y1
@@ -229,86 +320,204 @@ class turtle:
     setposition = goto
 
     def setx(self, x):
+        """Set the turtle’s first coordinate to x, leave second coordinate
+        unchanged.
+
+        :param x: new value of the turtle's x coordinate (a number)
+
+        """
         self.goto(x, self.pos()[1])
 
     def sety(self, y):
+        """Set the turtle’s second coordinate to y, leave first coordinate
+        unchanged.
+
+        :param y: new value of the turtle's y coordinate (a number)
+
+        """
         self.goto(self.pos()[0], y)
 
     def setheading(self, to_angle):
+        """Set the orientation of the turtle to to_angle. Here are some common
+        directions in degrees:
+
+        standard mode | logo mode
+        0 - east | 0 - north
+        90 - north | 90 - east
+        180 - west | 180 - south
+        270 - south | 270 - west
+
+        :param to_angle: the new turtle heading
+
+        """
+
         self._heading = to_angle
     seth = setheading
 
     def home(self):
+        """Move turtle to the origin – coordinates (0,0) – and set its heading to
+        its start-orientation
+        (which depends on the mode, see mode()).
+        """
         self.setheading(90)
-        self.goto(0,0)
+        self.goto(0, 0)
 
     def circle(self, radius, extent=None, steps=None):
+        """Draw a circle with given radius. The center is radius units left of
+        the turtle; extent – an angle – determines which part of the circle is
+        drawn. If extent is not given, draw the entire circle. If extent is not
+        a full circle, one endpoint of the arc is the current pen position.
+        Draw the arc in counterclockwise direction if radius is positive,
+        otherwise in clockwise direction. Finally the direction of the turtle
+        is changed by the amount of extent.
+
+        As the circle is approximated by an inscribed regular polygon, steps
+        determines the number of steps to use. If not given, it will be
+        calculated automatically. May be used to draw regular polygons.
+
+        :param radius: the radius of the circle
+        :param extent: the arc of the circle to be drawn
+        :param steps: how many points along the arc are computed
+
+        """
         raise NotImplementedError
 
+#pylint:disable=keyword-arg-before-vararg
     def dot(self, size=None, *color):
+        """Draw a circular dot with diameter size, using color.
+        If size is not given, the maximum of pensize+4 and
+        2*pensize is used.
+
+        :param size: the diameter of the dot
+        :param color: the color of the dot
+
+        """
         raise NotImplementedError
 
     def stamp(self):
+        """Stamp a copy of the turtle shape onto the canvas at the current
+        turtle position. Return a stamp_id for that stamp, which can be used to
+        delete it by calling clearstamp(stamp_id).
+        """
         raise NotImplementedError
 
-    def clearstamp(self):
+    def clearstamp(self, stampid):
+        """Delete stamp with given stampid.
+
+        :param stampid: the id of the stamp to be deleted
+
+        """
         raise NotImplementedError
 
-    def clearstamps(self):
+    def clearstamps(self, n=None):
+        """Delete all or first/last n of turtle’s stamps. If n is None, delete
+        all stamps, if n > 0 delete first n stamps, else if n < 0 delete last
+        n stamps.
+
+        :param n: how many stamps to delete (None means delete them all)
+
+        """
         raise NotImplementedError
 
     def undo(self):
+        """Undo (repeatedly) the last turtle action(s). Number of available undo
+        actions is determined by the size of the undobuffer.
+        """
         raise NotImplementedError
 
     def speed(self, speed=None):
+        """Set the turtle’s speed to an integer value in the range 0..10. If no
+        argument is given, return current speed.
+
+        If input is a number greater than 10 or smaller than 0.5, speed is set
+        to 0. Speedstrings are mapped to speedvalues as follows:
+
+        “fastest”: 0
+        “fast”: 10
+        “normal”: 6
+        “slow”: 3
+        “slowest”: 1
+
+        Speeds from 1 to 10 enforce increasingly faster animation of line
+        drawing and turtle turning.
+
+        Attention: speed = 0 means that no animation takes place.
+        forward/back makes turtle jump and likewise left/right make the
+        turtle turn instantly.
+
+        :param speed: the new turtle speed (0..10) or None
+        """
         raise NotImplementedError
 
 
     ####################
     # Tell turtle's state
     def pos(self):
-        return Vec2D(self._x - self._w//2, self._h//2 - self._y)
-    position=pos
+        """Return the turtle’s current location (x,y) (as a Vec2D vector)."""
+        return Vec2D(self._x - self._w // 2, self._h // 2 - self._y)
+    position = pos
 
     def clear(self):
+        """Delete the turtle’s drawings from the screen. Do not move turtle.
+        State and position of the turtle as well as drawings of other turtles
+        are not affected.
+        """
         for w in range(self._w):
             for h in range(self._h):
                 self._fg_bitmap[w, h] = 0
-        for i,c in enumerate(Color.colors):
-            self._fg_palette[i+1] = c^0xFFFFFF
+        for i, c in enumerate(Color.colors):
+            self._fg_palette[i + 1] = c ^ 0xFFFFFF
         self._display.refresh_soon()
-        for i,c in enumerate(Color.colors):
-            self._fg_palette[i+1] = c
+        for i, c in enumerate(Color.colors):
+            self._fg_palette[i + 1] = c
         self._display.refresh_soon()
         time.sleep(0.1)
 
-
     def heading(self):
+        """Return the turtle’s current heading (value depends on the turtle mode, see mode())."""
         return self._heading
-
 
     # Pen control
     def pendown(self):
+        """Pull the pen down – drawing when moving."""
         self._penstate = True
     pd = pendown
     down = pendown
 
     def penup(self):
+        """Pull the pen up – no drawing when moving."""
         self._penstate = False
     pu = penup
     up = penup
 
     def isdown(self):
+        """Return True if pen is down, False if it’s up."""
         return self._penstate
 
-    def pencolor(self, c):
+    def pencolor(self, c=None):
+        """
+        Return or set the pencolor.
+
+        :param c: the color to which to set the pen,
+                  None will cause the color to be returned
+        """
+        if c is None:
+            return Color.colors[self._pencolor - 1]
         if not c in Color.colors:
-            raise RuntimeError("Color must be one of the 'color' class items")
+            raise RuntimeError("Color must be one of the 'Color' class items")
         self._pencolor = 1 + Color.colors.index(c)
-
-
+        return c
 
     def mode(self, mode=None):
+        """
+        Set turtle mode (“standard”, “logo” or “world”) and perform reset.
+        If mode is not given, current mode is returned.
+
+        Mode “standard” is compatible with old turtle.
+        Mode “logo” is compatible with most Logo turtle graphics.
+
+        :param mode: one of the strings “standard” or “logo"
+        """
         if mode == "standard":
             self._logomode = False
         elif mode == "logo":
@@ -316,10 +525,11 @@ class turtle:
         elif mode is None:
             if self._logomode:
                 return "logo"
-            else:
-                return "standard"
+            return "standard"
         else:
             raise RuntimeError("Mode must be 'logo' or 'standard!'")
+        return None
+
     def _turn(self, angle):
         if self._logomode:
             self._heading -= angle
