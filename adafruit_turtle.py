@@ -358,7 +358,9 @@ class turtle(object):
         self.goto(0, 0)
 
     def circle(self, radius, extent=None, steps=None):
-        """Draw a circle with given radius. The center is radius units left of
+        """Not implemented
+
+        Draw a circle with given radius. The center is radius units left of
         the turtle; extent - an angle - determines which part of the circle is
         drawn. If extent is not given, draw the entire circle. If extent is not
         a full circle, one endpoint of the arc is the current pen position.
@@ -379,7 +381,9 @@ class turtle(object):
 
 #pylint:disable=keyword-arg-before-vararg
     def dot(self, size=None, *color):
-        """Draw a circular dot with diameter size, using color.
+        """Not implemented
+
+        Draw a circular dot with diameter size, using color.
         If size is not given, the maximum of pensize+4 and
         2*pensize is used.
 
@@ -390,14 +394,18 @@ class turtle(object):
         raise NotImplementedError
 
     def stamp(self):
-        """Stamp a copy of the turtle shape onto the canvas at the current
+        """Not implemented
+
+        Stamp a copy of the turtle shape onto the canvas at the current
         turtle position. Return a stamp_id for that stamp, which can be used to
         delete it by calling clearstamp(stamp_id).
         """
         raise NotImplementedError
 
     def clearstamp(self, stampid):
-        """Delete stamp with given stampid.
+        """Not implemented
+
+        Delete stamp with given stampid.
 
         :param stampid: the id of the stamp to be deleted
 
@@ -405,7 +413,9 @@ class turtle(object):
         raise NotImplementedError
 
     def clearstamps(self, n=None):
-        """Delete all or first/last n of turtle's stamps. If n is None, delete
+        """Not implemented
+
+        Delete all or first/last n of turtle's stamps. If n is None, delete
         all stamps, if n > 0 delete first n stamps, else if n < 0 delete last
         n stamps.
 
@@ -415,13 +425,17 @@ class turtle(object):
         raise NotImplementedError
 
     def undo(self):
-        """Undo (repeatedly) the last turtle action(s). Number of available undo
+        """Not implemented
+
+        Undo (repeatedly) the last turtle action(s). Number of available undo
         actions is determined by the size of the undobuffer.
         """
         raise NotImplementedError
 
     def speed(self, speed=None):
-        """Set the turtle's speed to an integer value in the range 0..10. If no
+        """Not implemented
+
+        Set the turtle's speed to an integer value in the range 0..10. If no
         argument is given, return current speed.
 
         If input is a number greater than 10 or smaller than 0.5, speed is set
@@ -454,7 +468,9 @@ class turtle(object):
     position = pos
 
     def towards(self, x1, y1=None):
-        """Return the angle between the line from turtle position to position
+        """Not implemented
+
+        Return the angle between the line from turtle position to position
         specified by (x,y) or the vector. This depends on the turtle's start
         orientation which depends on the mode - "standard" or "logo").
 
@@ -465,11 +481,15 @@ class turtle(object):
         raise NotImplementedError
 
     def xcor(self):
-        """Return the turtle's x coordinate."""
+        """Not implemented
+
+        Return the turtle's x coordinate."""
         raise NotImplementedError
 
     def ycor(self):
-        """Return the turtle's y coordinate."""
+        """Not implemented
+
+        Return the turtle's y coordinate."""
         raise NotImplementedError
 
     def heading(self):
@@ -479,7 +499,9 @@ class turtle(object):
         return self._heading
 
     def distance(self, x1, y1=None):
-        """Return the distance from the turtle to (x,y) or the vector, in turtle
+        """Not implemented
+
+        Return the distance from the turtle to (x,y) or the vector, in turtle
         step units.
 
         :param x: a number or a pair/vector of numbers
@@ -492,7 +514,9 @@ class turtle(object):
     # Setting and measurement
 
     def degrees(self, fullcircle=360):
-        """Set angle measurement units, i.e. set number of "degrees" for a full circle.
+        """Not implemented
+
+        Set angle measurement units, i.e. set number of "degrees" for a full circle.
         Default value is 360 degrees.
 
         :param fullcircle: the number of degrees in a full circle
@@ -500,7 +524,9 @@ class turtle(object):
         raise NotImplementedError
 
     def radians(self):
-        """Set the angle measurement units to radians. Equivalent to degrees(2*math.pi)."""
+        """Not implemented
+
+        Set the angle measurement units to radians. Equivalent to degrees(2*math.pi)."""
         raise NotImplementedError
 
 
@@ -520,7 +546,9 @@ class turtle(object):
     up = penup
 
     def pensize(self, width=None):
-        """Set the line thickness to width or return it. If resizemode is set to
+        """Not implemented
+
+        Set the line thickness to width or return it. If resizemode is set to
         "auto" and turtleshape is a polygon, that polygon is drawn with the same
         line thickness. If no argument is given, the current pensize is returned.
 
@@ -531,7 +559,11 @@ class turtle(object):
     width = pensize
 
     def pen(self, pen=None, **pendict):
-        """Return or set the pen's attributes in a "pen-dictionary" with
+        """Not implemented
+
+        Not implemented
+
+        Return or set the pen's attributes in a "pen-dictionary" with
         the following key/value pairs:
 
         "shown": True/False
@@ -553,7 +585,7 @@ class turtle(object):
         :param pen: a dictionary with some or all of the above listed keys
         :param pendict: ne or more keyword-arguments with the above listed keys
                         as keywords
-"""
+        """
 
         raise NotImplementedError
 
@@ -565,7 +597,9 @@ class turtle(object):
     # Color control
 
     def color(self, *args):
-        """Return or set pencolor and fillcolor.
+        """Not implemented
+
+        Return or set pencolor and fillcolor.
 
         Several input formats are allowed. They use 0 to 3 arguments as follows:
 
@@ -622,7 +656,8 @@ class turtle(object):
         return c
 
     def fillcolor(self, c=None):
-        """
+        """Not implemented
+
         Return or set the fillcolor.
 
         Four input formats are allowed:
@@ -654,22 +689,30 @@ class turtle(object):
     # Filling
 
     def filling(self):
-        """Return fillstate (True if filling, False else)."""
+        """Not implemented
+
+        Return fillstate (True if filling, False else)."""
         raise NotImplementedError
 
     def begin_fill(self):
-        """To be called just before drawing a shape to be filled."""
+        """Not implemented
+
+        To be called just before drawing a shape to be filled."""
         raise NotImplementedError
 
     def end_fill(self):
-        """Fill the shape drawn after the last call to begin_fill()."""
+        """Not implemented
+
+        Fill the shape drawn after the last call to begin_fill()."""
         raise NotImplementedError
 
     ############################################################################
     # More drawing control
 
     def reset(self):
-        """Delete the turtle's drawings from the screen, re-center the turtle
+        """Not implemented
+
+        Delete the turtle's drawings from the screen, re-center the turtle
         and set variables to the default values."""
         raise NotImplementedError
 
@@ -690,7 +733,9 @@ class turtle(object):
         time.sleep(0.1)
 
     def write(self, arg, move=False, align="left", font=("Arial", 8, "normal")):
-        """Write text - the string representation of arg - at the current turtle
+        """Not implemented
+
+        Write text - the string representation of arg - at the current turtle
         position according to align ("left", "center" or "right") and with the
         given font. If move is true, the pen is moved to the bottom-right corner
         of the text. By default, move is False.
@@ -707,24 +752,32 @@ class turtle(object):
     # Visibility
 
     def showturtle(self):
-        """Make the turtle visible."""
+        """Not implemented
+
+        Make the turtle visible."""
         raise NotImplementedError
     st = showturtle
 
     def hideturtle(self):
-        """Make the turtle invisible."""
+        """Not implemented
+
+        Make the turtle invisible."""
         raise NotImplementedError
     ht = hideturtle
 
     def isvisible(self):
-        """Return True if the Turtle is shown, False if it's hidden."""
+        """Not implemented
+
+        Return True if the Turtle is shown, False if it's hidden."""
         raise NotImplementedError
 
     ############################################################################
     # Appearance
 
     def shape(self, name=None):
-        """Set turtle shape to shape with given name or, if name is not
+        """Not implemented
+
+        Set turtle shape to shape with given name or, if name is not
         given, return name of current shape. Shape with name must exist
         in the TurtleScreen's shape dictionary. Initially there are the
         following polygon shapes: "arrow", "turtle", "circle", "square",
@@ -737,7 +790,9 @@ class turtle(object):
         raise NotImplementedError
 
     def resizemode(self, rmode=None):
-        """Set resizemode to one of the values: "auto", "user",
+        """Not implemented
+
+        Set resizemode to one of the values: "auto", "user",
 
         "noresize". If rmode is not given, return current
         resizemode. Different resizemodes have the following effects:
@@ -758,7 +813,9 @@ class turtle(object):
         raise NotImplementedError
 
     def shapesize(self, stretch_wid=None, stretch_len=None, outline=None):
-        """Return or set the pen's attributes x/y-stretchfactors and/or
+        """Not implemented
+
+        Return or set the pen's attributes x/y-stretchfactors and/or
         outline. Set resizemode to "user". If and only if resizemode is
         set to "user", the turtle will be displayed stretched according
         to its stretchfactors: stretch_wid is stretchfactor
@@ -775,7 +832,9 @@ class turtle(object):
     turtlesize = shapesize
 
     def sheerfactor(self, shear=None):
-        """Set or return the current shearfactor. Shear the turtleshape
+        """Not implemented
+
+        Set or return the current shearfactor. Shear the turtleshape
         according to the given shearfactor shear, which is the tangent
         of the shear angle. Do not change the turtle's heading
         (direction of movement). If shear is not given: return the
@@ -788,7 +847,9 @@ class turtle(object):
         raise NotImplementedError
 
     def settiltangle(self, angle):
-        """Rotate the turtleshape to point in the direction specified by
+        """Not implemented
+
+        Rotate the turtleshape to point in the direction specified by
         angle, regardless of its current tilt-angle. Do not change the
         turtle's heading (direction of movement).
 
@@ -798,7 +859,9 @@ class turtle(object):
         raise NotImplementedError
 
     def tiltangle(self, angle=None):
-        """Set or return the current tilt-angle. If angle is given,
+        """Not implemented
+
+        Set or return the current tilt-angle. If angle is given,
         rotate the turtleshape to point in the direction specified by
         angle, regardless of its current tilt-angle. Do not change the
         turtle's heading (direction of movement). If angle is not given:
@@ -812,7 +875,9 @@ class turtle(object):
         raise NotImplementedError
 
     def tilt(self, angle):
-        """Rotate the turtleshape by angle from its current tilt-angle,
+        """Not implemented
+
+        Rotate the turtleshape by angle from its current tilt-angle,
         but do not change the turtle's heading (direction of movement).
 
         :param angle: a number
@@ -820,7 +885,9 @@ class turtle(object):
         raise NotImplementedError
 
     def shapetransform(self, t11=None, t12=None, t21=None, t22=None):
-        """Set or return the current transformation matrix of the turtle shape.
+        """Not implemented
+
+        Set or return the current transformation matrix of the turtle shape.
 
         If none of the matrix elements are given, return the transformation
         matrix as a tuple of 4 elements. Otherwise set the given elements and
@@ -835,9 +902,12 @@ class turtle(object):
         :param t12: a number (optional)
 
         """
+        raise NotImplementedError
 
     def get_shapepoly(self):
-        """Return the current shape polygon as tuple of coordinate
+        """Not implemented
+
+        Return the current shape polygon as tuple of coordinate
         pairs. This can be used to define a new shape or components of a
         compound shape.
         """
@@ -847,7 +917,9 @@ class turtle(object):
     # Using events
 
     def onclick(self, fun, btn=1, add=None):
-        """Bind fun to mouse-click events on this turtle. If fun is
+        """Not implemented
+
+        Bind fun to mouse-click events on this turtle. If fun is
 
         None, existing bindings are removed.
 
@@ -863,7 +935,9 @@ class turtle(object):
         raise NotImplementedError
 
     def onrelease(self, fun, btn=1, add=None):
-        """Bind fun to mouse-button-release events on this turtle. If
+        """Not implemented
+
+        Bind fun to mouse-button-release events on this turtle. If
         fun is None, existing bindings are removed.
 
         :param fun: a function with two arguments which will be called with the
@@ -878,7 +952,9 @@ class turtle(object):
         raise NotImplementedError
 
     def ondrag(self, fun, btn=1, add=None):
-        """Bind fun to mouse-move events on this turtle. If fun is None,
+        """Not implemented
+
+        Bind fun to mouse-move events on this turtle. If fun is None,
         existing bindings are removed.
 
         Remark: Every sequence of mouse-move-events on a turtle is
@@ -899,13 +975,17 @@ class turtle(object):
     # Special turtle methods
 
     def begin_poly(self):
-        """Start recording the vertices of a polygon. Current turtle
+        """Not implemented
+
+        Start recording the vertices of a polygon. Current turtle
         position is first vertex of polygon.
         """
         raise NotImplementedError
 
     def end_poly(self):
-        """Stop recording the vertices of a polygon. Current turtle
+        """Not implemented
+
+        Stop recording the vertices of a polygon. Current turtle
         position is last vertex of polygon. This will be connected with
         the first vertex.
         """
@@ -913,30 +993,40 @@ class turtle(object):
 
 
     def get_poly(self):
-        """Return the last recorded polygon."""
+        """Not implemented
+
+        Return the last recorded polygon."""
         raise NotImplementedError
 
     def clone(self):
-        """Create and return a clone of the turtle with same position,
+        """Not implemented
+
+        Create and return a clone of the turtle with same position,
         heading and turtle properties.
         """
         raise NotImplementedError
 
     def getturtle(self):
-        """Return the Turtle object itself. Only reasonable use: as a
+        """Not implemented
+
+        Return the Turtle object itself. Only reasonable use: as a
         function to return the "anonymous turtle":
         """
         raise NotImplementedError
     getpen = getturtle
 
     def getscreen(self):
-        """Return the TurtleScreen object the turtle is drawing
+        """Not implemented
+
+        Return the TurtleScreen object the turtle is drawing
         on. TurtleScreen methods can then be called for that object.
         """
         raise NotImplementedError
 
     def setundobuffer(self, size):
-        """Set or disable undobuffer. If size is an integer an empty
+        """Not implemented
+
+        Set or disable undobuffer. If size is an integer an empty
         undobuffer of given size is installed. size gives the maximum
         number of turtle actions that can be undone by the undo()
         method/function. If size is None, the undobuffer is disabled.
@@ -947,7 +1037,9 @@ class turtle(object):
         raise NotImplementedError
 
     def undobufferentries(self):
-        """Return number of entries in the undobuffer."""
+        """Not implemented
+
+        Return number of entries in the undobuffer."""
         raise NotImplementedError
 
     ############################################################################
@@ -976,7 +1068,9 @@ class turtle(object):
         return None
 
     def colormode(self, cmode=None):
-        """Return the colormode or set it to 1.0 or 255. Subsequently r,
+        """Not implemented
+
+        Return the colormode or set it to 1.0 or 255. Subsequently r,
         g, b values of color triples have to be in the range 0..cmode.
 
         :param cmode: one of the valkues 1.0 or 255
@@ -984,19 +1078,25 @@ class turtle(object):
         raise NotImplementedError
 
     def getcanvas(self):
-        """Return the Canvas of this TurtleScreen. Useful for insiders
+        """Not implemented
+
+        Return the Canvas of this TurtleScreen. Useful for insiders
         who know what to do with a Tkinter Canvas.
         """
         raise NotImplementedError
 
     def getshapes(self):
-        """Return a list of names of all currently available turtle
+        """Not implemented
+
+        Return a list of names of all currently available turtle
         shapes.
         """
         raise NotImplementedError
 
     def register_shape(self, name, shape=None):
-        """There are three different ways to call this function:
+        """Not implemented
+
+        There are three different ways to call this function:
 
         1. name is the name of a gif-file and shape is None: Install the
         corresponding image shape.
@@ -1021,15 +1121,21 @@ class turtle(object):
     addshape = register_shape
 
     def turtles(self):
-        """Return the list of turtles on the screen."""
+        """Not implemented
+
+        Return the list of turtles on the screen."""
         raise NotImplementedError
 
     def window_height(self):
-        """Return the height of the turtle window."""
+        """Not implemented
+
+        Return the height of the turtle window."""
         raise NotImplementedError
 
     def window_width(self):
-        """Return the width of the turtle window."""
+        """Not implemented
+
+        Return the width of the turtle window."""
         raise NotImplementedError
 
     ############################################################################
