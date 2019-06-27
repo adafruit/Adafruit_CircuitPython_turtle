@@ -46,8 +46,9 @@ Implementation Notes
 * Adafruit's Bus Device library: https://github.com/adafruit/Adafruit_CircuitPython_BusDevice
 """
 
-#pylint:disable=too-many-public-methods,invalid-name,too-many-instance-attributes
-#pylint:disable=too-few-public-methods,too-many-lines
+#pylint:disable=too-many-public-methods,too-many-instance-attributes
+#pylint:disable=too-few-public-methods,too-many-lines,too-many-arguments
+#pylint:disable=no-self-use,invalid-name
 
 import gc
 import math
@@ -363,7 +364,6 @@ class turtle(object):
     def _plot(self, x, y, c):
         try:
             self._fg_bitmap[int(x), int(y)] = c
-#            self._logger.debug('Set fg_bitmap[%d, %d] to %d', x, y, self._fg_bitmap[int(x), int(y)])
         except IndexError:
             pass
 
@@ -378,7 +378,7 @@ class turtle(object):
 
   # pylint: disable=invalid-name, too-many-locals, too-many-branches
     def _helper(self, x0, y0, r, color, x_offset=0, y_offset=0,
-                stroke=1, corner_flags=0x0F, fill=False):
+                stroke=1, fill=False):
         """Draw quandrant wedges filled or outlined"""
         f = 1 - r
         ddF_x = 1
@@ -457,7 +457,7 @@ class turtle(object):
             color = self._color_to_pencolor(color)
         self._logger.debug('dot(%d)', size)
         self._draw_disk(self._x - size, self._y - size, 2 * size + 1, 2 * size + 1, size, color)
-        self._fg_sprite[0,0] = 0
+        self._fg_sprite[0, 0] = 0
 
     def stamp(self):
         """Not implemented
