@@ -438,9 +438,7 @@ class turtle(object):
 
 #pylint:disable=keyword-arg-before-vararg
     def dot(self, size=None, color=None):
-        """Not implemented
-
-        Draw a circular dot with diameter size, using color.
+        """Draw a circular dot with diameter size, using color.
         If size is not given, the maximum of pensize+4 and
         2*pensize is used.
 
