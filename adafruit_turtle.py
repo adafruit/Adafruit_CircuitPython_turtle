@@ -46,9 +46,8 @@ Implementation Notes
 * Adafruit's Bus Device library: https://github.com/adafruit/Adafruit_CircuitPython_BusDevice
 """
 
-#pylint:disable=too-many-public-methods,too-many-instance-attributes
-#pylint:disable=too-few-public-methods,too-many-lines,too-many-arguments
-#pylint:disable=no-self-use,invalid-name
+#pylint:disable=too-many-public-methods, too-many-instance-attributes, invalid-name
+#pylint:disable=too-few-public-methods, too-many-lines, too-many-arguments
 
 import gc
 import math
@@ -376,7 +375,7 @@ class turtle(object):
             self._helper(x+r, y+r, r, color=color, stroke=stroke,
                          x_offset=width-2*r-1, y_offset=height-2*r-1)
 
-  # pylint: disable=invalid-name, too-many-locals, too-many-branches
+  # pylint: disable=too-many-locals, too-many-branches
     def _helper(self, x0, y0, r, color, x_offset=0, y_offset=0,
                 stroke=1, fill=False):
         """Draw quandrant wedges filled or outlined"""
@@ -413,7 +412,7 @@ class turtle(object):
                 self._plot(x0 + x + x_offset, y0 - y + line, color)
                 self._plot(x0 + y + x_offset - line, y0 - x, color)
 
-    # pylint: enable=invalid-name, too-many-locals, too-many-branches
+    # pylint: enable=too-many-locals, too-many-branches
 
     def circle(self, radius, extent=None, steps=None):
         """Not implemented
@@ -664,8 +663,10 @@ class turtle(object):
     ############################################################################
     # Color control
 
+#pylint:disable=no-self-use
     def _color_to_pencolor(self, c):
         return 1 + Color.colors.index(c)
+#pylint:enable=no-self-use
 
     def color(self, *args):
         """Not implemented
