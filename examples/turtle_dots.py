@@ -10,7 +10,7 @@ print("Turtle time! Lets draw a rainbow benzene")
 turtle.pendown()
 
 for _ in range(4):
-    turtle.dot()
+    turtle.dot(8, Color.RED)
     turtle.left(90)
     turtle.forward(25)
 
