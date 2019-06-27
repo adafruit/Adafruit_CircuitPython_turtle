@@ -365,34 +365,21 @@ class turtle(object):
             self._fg_bitmap[int(x), int(y)] = c
 #            self._logger.debug('Set fg_bitmap[%d, %d] to %d', x, y, self._fg_bitmap[int(x), int(y)])
         except IndexError:
-            self._logger.debug('IndexError plotting (%d, %d)', x, y)
+            pass
 
     def _draw_disk(self, x, y, width, height, r, color, fill=True, outline=True, stroke=1):
-        self._logger.debug('_draw_disk(%d, %d, %d, %d, %d, %d)', x, y, width, height, r, color)
+        """Draw a filled and/or outlined circle"""
         if fill:
-            # for i in range(0, width):   # draw the center chunk
-            #     for j in range(r, height - r):   # draw the center chunk
-            #         self._plot(x + i, y + j, color)
             self._helper(x+r, y+r, r, color=color, fill=True,
                          x_offset=width-2*r-1, y_offset=height-2*r-1)
         if outline:
-            # draw flat sides
-            # for w in range(r, width - r):
-            #     for line in range(stroke):
-            #         self._plot(x + w, y + line, color)
-            #         self._plot(x + w, y + height - line - 1, color)
-            # for _h in range(r, height - r):
-            #     for line in range(stroke):
-            #         self._plot(x + line, y + _h, color)
-            #         self._plot(x + width - line - 1, y + _h, color)
-            # draw round corners
             self._helper(x+r, y+r, r, color=color, stroke=stroke,
                          x_offset=width-2*r-1, y_offset=height-2*r-1)
 
   # pylint: disable=invalid-name, too-many-locals, too-many-branches
     def _helper(self, x0, y0, r, color, x_offset=0, y_offset=0,
                 stroke=1, corner_flags=0x0F, fill=False):
-        self._logger.debug('_helper(%d, %d, %d, %d. %d, %d, %d, %d)', x0, y0, r, color, x_offset, y_offset, stroke, corner_flags)
+        """Draw quandrant wedges filled or outlined"""
         f = 1 - r
         ddF_x = 1
         ddF_y = -2 * r
@@ -407,34 +394,24 @@ class turtle(object):
             x += 1
             ddF_x += 2
             f += ddF_x
-            if corner_flags & 0x8:
-                if fill:
-                    for w in range(x0-y, x0+y+x_offset):
-                        self._plot(w, y0 + x + y_offset, color)
-                    for w in range(x0-x, x0+x+x_offset):
-                        self._plot(w, y0 + y + y_offset, color)
-                else:
-                    for line in range(stroke):
-                        self._plot(x0 - y + line, y0 + x + y_offset, color)
-                        self._plot(x0 - x, y0 + y + y_offset - line, color)
-            if corner_flags & 0x1:
-                if fill:
-                    for w in range(x0-y, x0+y+x_offset):
-                        self._plot(w, y0 - x, color)
-                    for w in range(x0-x, x0+x+x_offset):
-                        self._plot(w, y0 - y, color)
-                else:
-                    for line in range(stroke):
-                        self._plot(x0 - y + line, y0 - x, color)
-                        self._plot(x0 - x, y0 - y + line, color)
-            if corner_flags & 0x4:
+            if fill:
+                for w in range(x0-y, x0+y+x_offset):
+                    self._plot(w, y0 + x + y_offset, color)
+                    self._plot(w, y0 - x, color)
+                for w in range(x0-x, x0+x+x_offset):
+                    self._plot(w, y0 + y + y_offset, color)
+                    self._plot(w, y0 - y, color)
+            else:
                 for line in range(stroke):
-                    self._plot(x0 + x + x_offset, y0 + y + y_offset - line, color)
-                    self._plot(x0 + y + x_offset - line, y0 + x + y_offset, color)
-            if corner_flags & 0x2:
-                for line in range(stroke):
-                    self._plot(x0 + x + x_offset, y0 - y + line, color)
-                    self._plot(x0 + y + x_offset - line, y0 - x, color)
+                    self._plot(x0 - y + line, y0 + x + y_offset, color)
+                    self._plot(x0 - x, y0 + y + y_offset - line, color)
+                    self._plot(x0 - y + line, y0 - x, color)
+                    self._plot(x0 - x, y0 - y + line, color)
+            for line in range(stroke):
+                self._plot(x0 + x + x_offset, y0 + y + y_offset - line, color)
+                self._plot(x0 + y + x_offset - line, y0 + x + y_offset, color)
+                self._plot(x0 + x + x_offset, y0 - y + line, color)
+                self._plot(x0 + y + x_offset - line, y0 - x, color)
 
     # pylint: enable=invalid-name, too-many-locals, too-many-branches
 
