@@ -147,6 +147,10 @@ class turtle(object):
         self._speed = 6
         self._heading = 90
         self._logomode = False
+        self._fullcircle = 360.0
+        self._degreesPerAU = 1.0
+        self._mode = "standard"
+        self._angleOffset = 0
 
         self._splash = displayio.Group(max_size=3)
 
@@ -222,7 +226,6 @@ class turtle(object):
         self.forward(-distance)
     bk = backward
     back = backward
-
     def right(self, angle):
         """Turn turtle right by angle units. (Units are by default degrees,
         but can be set via the degrees() and radians() functions.)
@@ -366,6 +369,44 @@ class turtle(object):
         except IndexError:
             pass
 
+    def circle(self, radius, extent=None, steps=None):
+        """Draw a circle with given radius. The center is radius units left of
+        the turtle; extent - an angle - determines which part of the circle is
+        drawn. If extent is not given, draw the entire circle. If extent is not
+        a full circle, one endpoint of the arc is the current pen position.
+        Draw the arc in counterclockwise direction if radius is positive,
+        otherwise in clockwise direction. Finally the direction of the turtle
+        is changed by the amount of extent.
+
+        As the circle is approximated by an inscribed regular polygon, steps
+        determines the number of steps to use. If not given, it will be
+        calculated automatically. May be used to draw regular polygons.
+
+        :param radius: the radius of the circle
+        :param extent: the arc of the circle to be drawn
+        :param steps: how many points along the arc are computed
+        """
+        # call: circle(radius)                  # full circle
+        # --or: circle(radius, extent)          # arc
+        # --or: circle(radius, extent, steps)
+        # --or: circle(radius, steps=6)         # 6-sided polygon
+
+        if extent is None:
+            extent = self._fullcircle
+        if steps is None:
+            frac = abs(extent)/self._fullcircle
+            steps = 1+int(min(11+abs(radius)/6.0, 59.0)*frac)
+        w = 1.0 * extent / steps
+        w2 = 0.5 * w
+        l = 2.0 * radius * math.sin(w2*math.pi/180.0*self._degreesPerAU)
+        if radius < 0:
+            l, w, w2 = -l, -w, -w2
+        self.left(w2)
+        for _ in range(steps):
+            self.forward(l)
+            self.left(w)
+        self.right(w2)
+
     def _draw_disk(self, x, y, width, height, r, color, fill=True, outline=True, stroke=1):
         """Draw a filled and/or outlined circle"""
         if fill:
@@ -414,33 +455,9 @@ class turtle(object):
 
     # pylint: enable=too-many-locals, too-many-branches
 
-    def circle(self, radius, extent=None, steps=None):
-        """Not implemented
-
-        Draw a circle with given radius. The center is radius units left of
-        the turtle; extent - an angle - determines which part of the circle is
-        drawn. If extent is not given, draw the entire circle. If extent is not
-        a full circle, one endpoint of the arc is the current pen position.
-        Draw the arc in counterclockwise direction if radius is positive,
-        otherwise in clockwise direction. Finally the direction of the turtle
-        is changed by the amount of extent.
-
-        As the circle is approximated by an inscribed regular polygon, steps
-        determines the number of steps to use. If not given, it will be
-        calculated automatically. May be used to draw regular polygons.
-
-        :param radius: the radius of the circle
-        :param extent: the arc of the circle to be drawn
-        :param steps: how many points along the arc are computed
-
-        """
-        raise NotImplementedError
-
 #pylint:disable=keyword-arg-before-vararg
     def dot(self, size=None, color=None):
-        """Not implemented
-
-        Draw a circular dot with diameter size, using color.
+        """Draw a circular dot with diameter size, using color.
         If size is not given, the maximum of pensize+4 and
         2*pensize is used.
 
@@ -511,7 +528,6 @@ class turtle(object):
         "normal": 6
         "slow": 3
         "slowest": 1
-
         Speeds from 1 to 10 enforce increasingly faster animation of line
         drawing and turtle turning.
 
@@ -578,21 +594,27 @@ class turtle(object):
     ############################################################################
     # Setting and measurement
 
-    def degrees(self, fullcircle=360):
-        """Not implemented
+    def _setDegreesPerAU(self, fullcircle):
+        """Helper function for degrees() and radians()"""
+        self._fullcircle = fullcircle
+        self._degreesPerAU = 360/fullcircle
+        if self._mode == "standard":
+            self._angleOffset = 0
+        else:
+            self._angleOffset = fullcircle/4.
 
-        Set angle measurement units, i.e. set number of "degrees" for a full circle.
+
+    def degrees(self, fullcircle=360):
+        """Set angle measurement units, i.e. set number of "degrees" for a full circle.
         Default value is 360 degrees.
 
         :param fullcircle: the number of degrees in a full circle
         """
-        raise NotImplementedError
+        self._setDegreesPerAU(fullcircle)
 
     def radians(self):
-        """Not implemented
-
-        Set the angle measurement units to radians. Equivalent to degrees(2*math.pi)."""
-        raise NotImplementedError
+        """Set the angle measurement units to radians. Equivalent to degrees(2*math.pi)."""
+        self._setDegreesPerAU(2*math.pi)
 
 
     ############################################################################
