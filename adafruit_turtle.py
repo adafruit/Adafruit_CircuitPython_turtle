@@ -391,12 +391,12 @@ class turtle(object):
 
   # pylint: disable=invalid-name, too-many-locals, too-many-branches
     def _helper(self, x0, y0, r, color, x_offset=0, y_offset=0,
-                stroke=1, corner_flags=0xF, fill=False):
+                stroke=1, corner_flags=0x0F, fill=False):
         self._logger.debug('_helper(%d, %d, %d, %d. %d, %d, %d, %d)', x0, y0, r, color, x_offset, y_offset, stroke, corner_flags)
         f = 1 - r
         ddF_x = 1
         ddF_y = -2 * r
-        x = 0
+        x = -1
         y = r
 
         while x < y:
@@ -435,8 +435,6 @@ class turtle(object):
                 for line in range(stroke):
                     self._plot(x0 + x + x_offset, y0 - y + line, color)
                     self._plot(x0 + y + x_offset - line, y0 - x, color)
-        self._drawturtle()
-        time.sleep(0.003)
 
     # pylint: enable=invalid-name, too-many-locals, too-many-branches
 
@@ -482,6 +480,7 @@ class turtle(object):
             color = self._color_to_pencolor(color)
         self._logger.debug('dot(%d)', size)
         self._draw_disk(self._x - size, self._y - size, 2 * size + 1, 2 * size + 1, size, color)
+        self._fg_sprite[0,0] = 0
 
     def stamp(self):
         """Not implemented

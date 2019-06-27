@@ -9,28 +9,10 @@ print("Turtle time! Lets draw a rainbow benzene")
 
 turtle.pendown()
 
-turtle.dot(20)
-turtle.forward(5)
-turtle.right(90)
-turtle.forward(5)
 for _ in range(4):
-    turtle.right(90)
-    turtle.forward(10)
-    # turtle.forward(5)
-    # turtle.right(90)
-    # turtle.forward(20)
-    # turtle.left(90)
-    # turtle.forward(5)
-    # turtle.left(90)
-
-
-# turtle.dot(40)
-# turtle.left(90)
-# turtle.forward(25)
-# turtle.dot(30)
-# turtle.left(90)
-# turtle.forward(25)
-# turtle.dot(20)
+    turtle.dot()
+    turtle.left(90)
+    turtle.forward(25)
 
 while True:
     pass
