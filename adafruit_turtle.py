@@ -46,8 +46,8 @@ Implementation Notes
 * Adafruit's Bus Device library: https://github.com/adafruit/Adafruit_CircuitPython_BusDevice
 """
 
-#pylint:disable=too-many-public-methods,invalid-name,too-many-instance-attributes
-#pylint:disable=too-few-public-methods,too-many-lines
+#pylint:disable=too-many-public-methods, too-many-instance-attributes, invalid-name
+#pylint:disable=too-few-public-methods, too-many-lines, too-many-arguments
 
 import gc
 import math
@@ -185,6 +185,7 @@ class turtle(object):
 
         self._penstate = False
         self._pencolor = None
+        self._pensize = 1
         self.pencolor(Color.WHITE)
 
         self._display.show(self._splash)
@@ -287,7 +288,8 @@ class turtle(object):
         while (not rev and x0 <= x1) or (rev and x1 <= x0):
             if steep:
                 try:
-                    self._fg_bitmap[int(y0), int(x0)] = self._pencolor
+                    self._plot(int(y0), int(x0), self._pencolor)
+#                    self._fg_bitmap[int(y0), int(x0)] = self._pencolor
                 except IndexError:
                     pass
                 self._x = y0
@@ -296,7 +298,8 @@ class turtle(object):
                 time.sleep(0.003)
             else:
                 try:
-                    self._fg_bitmap[int(x0), int(y0)] = self._pencolor
+                    self._plot(int(x0), int(y0), self._pencolor)
+#                    self._fg_bitmap[int(x0), int(y0)] = self._pencolor
                 except IndexError:
                     pass
                 self._x = x0
@@ -357,6 +360,60 @@ class turtle(object):
         self.setheading(90)
         self.goto(0, 0)
 
+    def _plot(self, x, y, c):
+        try:
+            self._fg_bitmap[int(x), int(y)] = c
+        except IndexError:
+            pass
+
+    def _draw_disk(self, x, y, width, height, r, color, fill=True, outline=True, stroke=1):
+        """Draw a filled and/or outlined circle"""
+        if fill:
+            self._helper(x+r, y+r, r, color=color, fill=True,
+                         x_offset=width-2*r-1, y_offset=height-2*r-1)
+        if outline:
+            self._helper(x+r, y+r, r, color=color, stroke=stroke,
+                         x_offset=width-2*r-1, y_offset=height-2*r-1)
+
+  # pylint: disable=too-many-locals, too-many-branches
+    def _helper(self, x0, y0, r, color, x_offset=0, y_offset=0,
+                stroke=1, fill=False):
+        """Draw quandrant wedges filled or outlined"""
+        f = 1 - r
+        ddF_x = 1
+        ddF_y = -2 * r
+        x = -1
+        y = r
+
+        while x < y:
+            if f >= 0:
+                y -= 1
+                ddF_y += 2
+                f += ddF_y
+            x += 1
+            ddF_x += 2
+            f += ddF_x
+            if fill:
+                for w in range(x0-y, x0+y+x_offset):
+                    self._plot(w, y0 + x + y_offset, color)
+                    self._plot(w, y0 - x, color)
+                for w in range(x0-x, x0+x+x_offset):
+                    self._plot(w, y0 + y + y_offset, color)
+                    self._plot(w, y0 - y, color)
+            else:
+                for line in range(stroke):
+                    self._plot(x0 - y + line, y0 + x + y_offset, color)
+                    self._plot(x0 - x, y0 + y + y_offset - line, color)
+                    self._plot(x0 - y + line, y0 - x, color)
+                    self._plot(x0 - x, y0 - y + line, color)
+            for line in range(stroke):
+                self._plot(x0 + x + x_offset, y0 + y + y_offset - line, color)
+                self._plot(x0 + y + x_offset - line, y0 + x + y_offset, color)
+                self._plot(x0 + x + x_offset, y0 - y + line, color)
+                self._plot(x0 + y + x_offset - line, y0 - x, color)
+
+    # pylint: enable=too-many-locals, too-many-branches
+
     def circle(self, radius, extent=None, steps=None):
         """Not implemented
 
@@ -380,7 +437,7 @@ class turtle(object):
         raise NotImplementedError
 
 #pylint:disable=keyword-arg-before-vararg
-    def dot(self, size=None, *color):
+    def dot(self, size=None, color=None):
         """Not implemented
 
         Draw a circular dot with diameter size, using color.
@@ -391,7 +448,15 @@ class turtle(object):
         :param color: the color of the dot
 
         """
-        raise NotImplementedError
+        if size is None:
+            size = max(self._pensize + 4, self._pensize * 2)
+        if color is None:
+            color = self._pencolor
+        else:
+            color = self._color_to_pencolor(color)
+        self._logger.debug('dot(%d)', size)
+        self._draw_disk(self._x - size, self._y - size, 2 * size + 1, 2 * size + 1, size, color)
+        self._fg_sprite[0, 0] = 0
 
     def stamp(self):
         """Not implemented
@@ -555,7 +620,9 @@ class turtle(object):
         :param width: - a positive number
 
         """
-        raise NotImplementedError
+        if width is not None:
+            self._pensize = width
+        return self._pensize
     width = pensize
 
     def pen(self, pen=None, **pendict):
@@ -595,6 +662,11 @@ class turtle(object):
 
     ############################################################################
     # Color control
+
+#pylint:disable=no-self-use
+    def _color_to_pencolor(self, c):
+        return 1 + Color.colors.index(c)
+#pylint:enable=no-self-use
 
     def color(self, *args):
         """Not implemented
