@@ -366,6 +366,28 @@ class turtle(object):
         except IndexError:
             pass
 
+    def circle(self, radius, extent=None, steps=None):
+        """Not implemented
+
+        Draw a circle with given radius. The center is radius units left of
+        the turtle; extent - an angle - determines which part of the circle is
+        drawn. If extent is not given, draw the entire circle. If extent is not
+        a full circle, one endpoint of the arc is the current pen position.
+        Draw the arc in counterclockwise direction if radius is positive,
+        otherwise in clockwise direction. Finally the direction of the turtle
+        is changed by the amount of extent.
+
+        As the circle is approximated by an inscribed regular polygon, steps
+        determines the number of steps to use. If not given, it will be
+        calculated automatically. May be used to draw regular polygons.
+
+        :param radius: the radius of the circle
+        :param extent: the arc of the circle to be drawn
+        :param steps: how many points along the arc are computed
+
+        """
+        raise NotImplementedError
+
     def _draw_disk(self, x, y, width, height, r, color, fill=True, outline=True, stroke=1):
         """Draw a filled and/or outlined circle"""
         if fill:
@@ -413,28 +435,6 @@ class turtle(object):
                 self._plot(x0 + y + x_offset - line, y0 - x, color)
 
     # pylint: enable=too-many-locals, too-many-branches
-
-    def circle(self, radius, extent=None, steps=None):
-        """Not implemented
-
-        Draw a circle with given radius. The center is radius units left of
-        the turtle; extent - an angle - determines which part of the circle is
-        drawn. If extent is not given, draw the entire circle. If extent is not
-        a full circle, one endpoint of the arc is the current pen position.
-        Draw the arc in counterclockwise direction if radius is positive,
-        otherwise in clockwise direction. Finally the direction of the turtle
-        is changed by the amount of extent.
-
-        As the circle is approximated by an inscribed regular polygon, steps
-        determines the number of steps to use. If not given, it will be
-        calculated automatically. May be used to draw regular polygons.
-
-        :param radius: the radius of the circle
-        :param extent: the arc of the circle to be drawn
-        :param steps: how many points along the arc are computed
-
-        """
-        raise NotImplementedError
 
 #pylint:disable=keyword-arg-before-vararg
     def dot(self, size=None, color=None):
