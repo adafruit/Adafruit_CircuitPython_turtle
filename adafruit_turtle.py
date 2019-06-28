@@ -226,6 +226,7 @@ class turtle(object):
         self.forward(-distance)
     bk = backward
     back = backward
+
     def right(self, angle):
         """Turn turtle right by angle units. (Units are by default degrees,
         but can be set via the degrees() and radians() functions.)
@@ -292,7 +293,6 @@ class turtle(object):
             if steep:
                 try:
                     self._plot(int(y0), int(x0), self._pencolor)
-#                    self._fg_bitmap[int(y0), int(x0)] = self._pencolor
                 except IndexError:
                     pass
                 self._x = y0
@@ -302,7 +302,6 @@ class turtle(object):
             else:
                 try:
                     self._plot(int(x0), int(y0), self._pencolor)
-#                    self._fg_bitmap[int(x0), int(y0)] = self._pencolor
                 except IndexError:
                     pass
                 self._x = x0
@@ -562,16 +561,12 @@ class turtle(object):
         raise NotImplementedError
 
     def xcor(self):
-        """Not implemented
-
-        Return the turtle's x coordinate."""
-        raise NotImplementedError
+        """Return the turtle's x coordinate."""
+        return self._x - self._w // 2
 
     def ycor(self):
-        """Not implemented
-
-        Return the turtle's y coordinate."""
-        raise NotImplementedError
+        """Return the turtle's y coordinate."""
+        return self._h // 2 - self._y
 
     def heading(self):
         """Return the turtle's current heading (value depends on the turtle
@@ -726,18 +721,10 @@ class turtle(object):
             tuple (see example). May be used as input to another color/
             pencolor/fillcolor call.
 
-        pencolor(colorstring)
-            Set pencolor to colorstring, which is a Tk color specification
-            string, such as "red", "yellow", or "#33cc8c".
-
-        pencolor((r, g, b))
-            Set pencolor to the RGB color represented by the tuple of r, g, and
-            b. Each of r, g, and b must be in the range 0..colormode, where
-            colormode is either 1.0 or 255 (see colormode()).
-
-        pencolor(r, g, b)
-            Set pencolor to the RGB color represented by r, g, and b. Each of r,
-            g, and b must be in the range 0..colormode.
+        pencolor(colorvalue)
+            Set pencolor to colorvalue, which is a 24-bit integer such as 0xFF0000.
+            The Color class provides the available values:
+            WHITE, BLACK, RED, ORANGE, YELLOW, GREEN, BLUE, PURPLE, PINK
 
         If turtleshape is a polygon, the outline of that polygon is drawn with
         the newly set pencolor.
@@ -811,10 +798,7 @@ class turtle(object):
         raise NotImplementedError
 
     def clear(self):
-        """Delete the turtle's drawings from the screen. Do not move turtle.
-        State and position of the turtle as well as drawings of other turtles
-        are not affected.
-        """
+        """Delete the turtle's drawings from the screen. Do not move turtle."""
         for w in range(self._w):
             for h in range(self._h):
                 self._fg_bitmap[w, h] = 0
@@ -1140,7 +1124,8 @@ class turtle(object):
     # Settings and special methods
 
     def mode(self, mode=None):
-        """
+        """Not implemented
+
         Set turtle mode ("standard" or "logo") and perform reset.
         If mode is not given, current mode is returned.
 
@@ -1149,17 +1134,18 @@ class turtle(object):
 
         :param mode: one of the strings "standard" or "logo"
         """
-        if mode == "standard":
-            self._logomode = False
-        elif mode == "logo":
-            self._logomode = True
-        elif mode is None:
-            if self._logomode:
-                return "logo"
-            return "standard"
-        else:
-            raise RuntimeError("Mode must be 'logo' or 'standard!'")
-        return None
+        raise NotImplementedError
+        # if mode == "standard":
+        #     self._logomode = False
+        # elif mode == "logo":
+        #     self._logomode = True
+        # elif mode is None:
+        #     if self._logomode:
+        #         return "logo"
+        #     return "standard"
+        # else:
+        #     raise RuntimeError("Mode must be 'logo', 'standard!', or None")
+        # return None
 
     def colormode(self, cmode=None):
         """Not implemented
