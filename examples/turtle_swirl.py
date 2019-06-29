@@ -8,7 +8,7 @@ turtle.pendown()
 
 colors = [Color.ORANGE, Color.PURPLE]
 
-for x in range(300):
+for x in range(400):
     turtle.pencolor(colors[x % 2])
     turtle.forward(x)
     turtle.left(91)
