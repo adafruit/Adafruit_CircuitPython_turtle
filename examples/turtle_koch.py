@@ -16,7 +16,7 @@ def f(side_length, depth, generation):
 
 turtle = turtle(board.DISPLAY)
 
-unit= min(board.DISPLAY.width / 3, board.DISPLAY.height / 4)
+unit = min(board.DISPLAY.width / 3, board.DISPLAY.height / 4)
 top_len = unit * 3
 print(top_len)
 turtle.penup()
