@@ -138,7 +138,7 @@ class turtle(object):
 
     def __init__(self, display=board.DISPLAY):
         self._logger = logging.getLogger("Turtle")
-        self._logger.setLevel(logging.DEBUG)
+        self._logger.setLevel(logging.INFO)
         self._display = display
         self._w = self._display.width
         self._h = self._display.height

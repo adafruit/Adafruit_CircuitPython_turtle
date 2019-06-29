@@ -3,13 +3,18 @@ from adafruit_turtle import Color, turtle
 
 turtle = turtle(board.DISPLAY)
 
-turtle.pencolor(Color.WHITE)
-
+mycolors = [Color.WHITE, Color.RED, Color.BLUE, Color.GREEN, Color.ORANGE, Color.PURPLE]
+turtle.penup()
+turtle.forward(130)
+turtle.right(180)
 turtle.pendown()
-turtle.circle(20)
-turtle.forward(20)
-turtle.circle(20, extent=180)
-turtle.forward(50)
-turtle.circle(50, steps=6)
+
+for i in range(6):
+    turtle.pencolor(mycolors[i])
+    turtle.circle(25)
+    turtle.penup()
+    turtle.forward(50)
+    turtle.pendown()
+
 while True:
     pass
