@@ -200,6 +200,7 @@ class turtle(object):
     def _drawturtle(self):
         self._turtle_sprite.x = int(self._x - 4)
         self._turtle_sprite.y = int(self._y - 4)
+        #self._logger.debug("pos (%d, %d)", self._x, self._y)
 
     ############################################################################
     # Move and draw
@@ -263,6 +264,7 @@ class turtle(object):
         y1 = self._h // 2 - y1
         x0 = self._x
         y0 = self._y
+        self._logger.debug("* GoTo from (%d, %d) to (%d, %d)", x0, y0, x1, y1)
         if not self.isdown():
             self._x = x1    # woot, we just skip ahead
             self._y = y1
@@ -468,6 +470,7 @@ class turtle(object):
             color = self._pencolor
         else:
             color = self._color_to_pencolor(color)
+        self._logger.debug('dot(%d)', size)
         self._draw_disk(self._x - size, self._y - size, 2 * size + 1, 2 * size + 1, size, color)
         self._fg_sprite[0, 0] = 0
 
