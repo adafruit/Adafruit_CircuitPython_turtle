@@ -136,10 +136,16 @@ class Vec2D(tuple):
 class turtle(object):
     """A Turtle that can be given commands to draw."""
 
-    def __init__(self, display=board.DISPLAY):
+    def __init__(self, display=None):
+        if display:
+            self._display = display
+        else:
+            try:
+                self._display = board.DISPLAY
+            except AttributeError:
+                raise RuntimeError("No display available. One must be provided.")
         self._logger = logging.getLogger("Turtle")
         self._logger.setLevel(logging.INFO)
-        self._display = display
         self._w = self._display.width
         self._h = self._display.height
         self._x = self._w // 2
@@ -193,9 +199,7 @@ class turtle(object):
         self.pencolor(Color.WHITE)
 
         self._display.show(self._splash)
-        self._display.refresh_soon()
         gc.collect()
-        self._display.wait_for_frame()
 
     def _drawturtle(self):
         self._turtle_sprite.x = int(self._x - 4)
@@ -298,7 +302,6 @@ class turtle(object):
                 self._x = y0
                 self._y = x0
                 self._drawturtle()
-                time.sleep(0.003)
             else:
                 try:
                     self._plot(int(x0), int(y0), self._pencolor)
@@ -307,7 +310,6 @@ class turtle(object):
                 self._x = x0
                 self._y = y0
                 self._drawturtle()
-                time.sleep(0.003)
             err -= dy
             if err < 0:
                 y0 += ystep
@@ -804,10 +806,8 @@ class turtle(object):
                 self._fg_bitmap[w, h] = 0
         for i, c in enumerate(Color.colors):
             self._fg_palette[i + 1] = c ^ 0xFFFFFF
-        self._display.refresh_soon()
         for i, c in enumerate(Color.colors):
             self._fg_palette[i + 1] = c
-        self._display.refresh_soon()
         time.sleep(0.1)
 
     def write(self, arg, move=False, align="left", font=("Arial", 8, "normal")):
