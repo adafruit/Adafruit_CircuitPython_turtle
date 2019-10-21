@@ -130,8 +130,7 @@ class Vec2D(tuple):
         return (self[0], self[1])
 
     def __repr__(self):
-        return "(%.2f,%.2f)" % self
-
+        return "({:.2f},{:.2f})".format(self[0], self[1])
 
 class turtle(object):
     """A Turtle that can be given commands to draw."""
