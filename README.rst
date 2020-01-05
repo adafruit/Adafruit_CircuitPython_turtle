@@ -9,8 +9,8 @@ Introduction
     :target: https://discord.gg/nBQh6qu
     :alt: Discord
 
-.. image:: https://travis-ci.com/adafruit/Adafruit_CircuitPython_turtle.svg?branch=master
-    :target: https://travis-ci.com/adafruit/Adafruit_CircuitPython_turtle
+.. image:: https://github.com/adafruit/Adafruit_CircuitPython_turtle/workflows/Build%20CI/badge.svg
+    :target: https://github.com/adafruit/Adafruit_CircuitPython_turtle/actions/
     :alt: Build Status
 
 Turtle graphics library for CircuitPython and displayio
