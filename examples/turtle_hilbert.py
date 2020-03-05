@@ -35,7 +35,7 @@ def hilbert2(step, rule, angle, depth, t):
 
 turtle = turtle(board.DISPLAY)
 turtle.penup()
-
+turtle.heading(90)
 turtle.goto(-80, -80)
 turtle.pendown()
 hilbert2(5, "a", 90, 5, turtle)
