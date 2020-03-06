@@ -227,6 +227,7 @@ class turtle(object):
         self._pencolor = 1
         self.pencolor(Color.WHITE)
         self._bg_pic = None
+        self._bg_pic_filename = ""
         self._turtle_pic = None
         self._turtle_odb = None
         self._turtle_alt_sprite = None
@@ -915,33 +916,34 @@ class turtle(object):
                     self._fg_bitmap[w, h] = self._bg_color
         return Color.colors[self._bg_color]
 
-    def set_bgpic(self, file):
+    # pylint:disable=inconsistent-return-statements
+    def bgpic(self, picname=None):
+        """Set background image or return name of current backgroundimage.
+        Optional argument:
+        picname -- a string, name of an image file or "nopic".
+        If picname is a filename, set the corresponding image as background.
+        If picname is "nopic", delete backgroundimage, if present.
+        If picname is None, return the filename of the current backgroundimage.
         """
-        Set a picture as background.
-
-        set_bgpic(filename)
-            Set backgroud picture using OnDiskBitmap.
-        """
-        self._bg_pic = open(file, 'rb')
-        odb = displayio.OnDiskBitmap(self._bg_pic)
-        self._odb_tilegrid = displayio.TileGrid(odb, pixel_shader=displayio.ColorConverter())
-        self._bg_addon_group.append(self._odb_tilegrid)
-        # centered
-        self._odb_tilegrid.y = ((self._h*self._fg_scale)//2) - (odb.height//2)
-        self._odb_tilegrid.x = ((self._w*self._fg_scale)//2) - (odb.width//2)
-
-    def del_bgpic(self):
-        """
-        Remove the background picture, if any
-
-        del_bgpic()
-            Remove the picture and close the file
-        """
-        if self._bg_pic is not None:
-            self._bg_addon_group.remove(self._odb_tilegrid)
-            self._odb_tilegrid = None
-            self._bg_pic.close()
-            self._bg_pic = None
+        if picname is None:
+            return self._bg_pic_filename
+        if picname == "nopic":
+            if self._bg_pic is not None:
+                self._bg_addon_group.remove(self._odb_tilegrid)
+                self._odb_tilegrid = None
+                self._bg_pic.close()
+                self._bg_pic = None
+                self._bg_pic_filename = ""
+        else:
+            self._bg_pic = open(picname, 'rb')
+            odb = displayio.OnDiskBitmap(self._bg_pic)
+            self._odb_tilegrid = displayio.TileGrid(odb, pixel_shader=displayio.ColorConverter())
+            self._bg_addon_group.append(self._odb_tilegrid)
+            self._bg_pic_filename = picname
+            # centered
+            self._odb_tilegrid.y = ((self._h*self._fg_scale)//2) - (odb.height//2)
+            self._odb_tilegrid.x = ((self._w*self._fg_scale)//2) - (odb.width//2)
+    # pylint:enable=inconsistent-return-statements
 
     ###########################################################################
     # More drawing control
