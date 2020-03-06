@@ -953,7 +953,7 @@ class turtle(object):
         Delete the turtle's drawings from the screen, re-center the turtle
         and set variables to the default values."""
         self.changeturtle()
-        self.del_bgpic()
+        self.bgpic("nopic")
         self.bgcolor(Color.BLACK)
         self.clear()
         self.penup()
