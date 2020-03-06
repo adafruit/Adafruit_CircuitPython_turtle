@@ -31,7 +31,7 @@ turtle = turtle(board.DISPLAY)
 unit= min(board.DISPLAY.width / 3, board.DISPLAY.height / 4)
 top_len = unit * 3
 print(top_len)
-turtle.heading(90)
+turtle.setheading(90)
 
 turtle.penup()
 turtle.goto(-1.5 * unit, unit)
