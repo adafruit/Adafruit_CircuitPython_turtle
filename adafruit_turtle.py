@@ -174,7 +174,7 @@ class turtle(object):
                 i += 1
         else:
             self._bgscale = self._GCD(self._w, self._h)
-            self._bg_bitmap = displayio.Bitmap(self._w//self._bgscale, self._h//self._bgscale , 1)
+            self._bg_bitmap = displayio.Bitmap(self._w//self._bgscale, self._h//self._bgscale, 1)
         self._bg_palette = displayio.Palette(1)
         self._bg_palette[0] = Color.colors[self._bg_color]
         self._bg_sprite = displayio.TileGrid(self._bg_bitmap,
@@ -260,8 +260,9 @@ class turtle(object):
         :param distance: how far to move (integer or float)
         """
         p = self.pos()
-        x1 = p[0] + math.sin(math.radians((self._angleOffset + self._angleOrient*self._heading) % self._fullcircle)) * distance
-        y1 = p[1] + math.cos(math.radians((self._angleOffset + self._angleOrient*self._heading) % self._fullcircle)) * distance
+        angle = (self._angleOffset + self._angleOrient*self._heading) % self._fullcircle
+        x1 = p[0] + math.sin(math.radians(angle)) * distance
+        y1 = p[1] + math.cos(math.radians(angle)) * distance
         self.goto(x1, y1)
     fd = forward
 
@@ -426,7 +427,7 @@ class turtle(object):
         self.setheading(90)
         self.goto(0, 0)
 
-    # pylint:disable=too-many-locals
+    # pylint:disable=too-many-locals, too-many-statements, too-many-branches
     def _plot(self, x, y, c):
         if self._pensize == 1:
             try:
@@ -435,8 +436,9 @@ class turtle(object):
             except IndexError:
                 pass
         r = self._pensize // 2 + 1
-        sin = math.sin(math.radians((self._angleOffset + self._angleOrient*self._heading - 90) % self._fullcircle))
-        cos = math.cos(math.radians((self._angleOffset + self._angleOrient*self._heading - 90) % self._fullcircle))
+        angle = (self._angleOffset + self._angleOrient*self._heading - 90) % self._fullcircle
+        sin = math.sin(math.radians(angle))
+        cos = math.cos(math.radians(angle))
         x0 = x + sin * r
         x1 = x - sin * (self._pensize - r)
         y0 = y - cos * r
@@ -501,7 +503,7 @@ class turtle(object):
                 x0 -= 1
             else:
                 x0 += 1
-    # pylint:enable=too-many-locals
+    # pylint:enable=too-many-locals, too-many-statements, too-many-branches
 
     def circle(self, radius, extent=None, steps=None):
         """Draw a circle with given radius. The center is radius units left of
@@ -718,9 +720,6 @@ class turtle(object):
         result = math.degrees(math.atan2(x1-x0, y1-y0))
         result /= self._degreesPerAU
         return (self._angleOffset + self._angleOrient*result) % self._fullcircle
-        if self._logomode:
-            return(math.degrees(math.atan2(x0-x1, y0-y1)))
-        return(math.degrees(math.atan2(y0-y1, x0-x1)))
 
     def xcor(self):
         """Return the turtle's x coordinate."""
@@ -749,7 +748,7 @@ class turtle(object):
             y1 = x1[1]
             x1 = x1[0]
         x0, y0 = self.pos()
-        return(math.sqrt((x0-x1)**2+(y0-y1)**2))
+        return math.sqrt((x0-x1) ** 2 + (y0 - y1) ** 2)
 
     ###########################################################################
     # Setting and measurement
@@ -1004,6 +1003,7 @@ class turtle(object):
             return True
         return False
 
+    # pylint:disable=too-many-statements, too-many-branches
     def changeturtle(self, source=None, dimensions=(12, 12)):
         """
         Change the turtle.
@@ -1053,7 +1053,8 @@ class turtle(object):
                 raise
             self._turtle_odb_use += 1
             self._turtle_pic = True
-            self._turtle_alt_sprite = displayio.TileGrid(self._turtle_odb, pixel_shader=displayio.ColorConverter())
+            self._turtle_alt_sprite = displayio.TileGrid(self._turtle_odb,
+                                                         pixel_shader=displayio.ColorConverter())
 
             if self._turtle_group:
                 self._turtle_group.pop()
@@ -1074,6 +1075,7 @@ class turtle(object):
             self._drawturtle()
         else:
             raise TypeError('Argument must be "str", a "displayio.TileGrid" or nothing.')
+    # pylint:enable=too-many-statements, too-many-branches
 
     ###########################################################################
     # Other
@@ -1126,6 +1128,5 @@ class turtle(object):
         recursive 'Greatest common divisor' calculus for int numbers a and b"""
         if b == 0:
             return a
-        else:
-            r = a % b
-            return self._GCD(b, r)
+        r = a % b
+        return self._GCD(b, r)
