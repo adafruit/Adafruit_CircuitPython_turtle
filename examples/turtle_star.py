@@ -7,6 +7,7 @@ starsize = min(board.DISPLAY.width, board.DISPLAY.height) * 0.9  # 90% of screen
 print("Turtle time! Lets draw a star")
 
 turtle.pencolor(Color.BLUE)
+turtle.setheading(90)
 
 turtle.penup()
 turtle.goto(-starsize/2, 0)
