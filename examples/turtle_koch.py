@@ -1,10 +1,9 @@
 import board
 from adafruit_turtle import turtle
 
+
 def f(side_length, depth, generation):
-    if depth == 0:
-        side = turtle.forward(side_length)
-    else:
+    if depth != 0:
         side = lambda: f(side_length / 3, depth - 1, generation + 1)
         side()
         turtle.left(60)
@@ -13,6 +12,7 @@ def f(side_length, depth, generation):
         side()
         turtle.left(60)
         side()
+
 
 turtle = turtle(board.DISPLAY)
 

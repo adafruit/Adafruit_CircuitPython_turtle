@@ -44,8 +44,8 @@ Implementation Notes
   https://github.com/adafruit/Adafruit_CircuitPython_BusDevice
 """
 
-#pylint:disable=too-many-public-methods, too-many-instance-attributes, invalid-name
-#pylint:disable=too-few-public-methods, too-many-lines, too-many-arguments
+# pylint:disable=too-many-public-methods, too-many-instance-attributes, invalid-name
+# pylint:disable=too-few-public-methods, too-many-lines, too-many-arguments
 
 import gc
 import math
@@ -56,8 +56,10 @@ import displayio
 __version__ = "0.0.0-auto.0"
 __repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_turtle.git"
 
-class Color(object):
+
+class Color:
     """Standard colors"""
+
     WHITE = 0xFFFFFF
     BLACK = 0x000000
     RED = 0xFF0000
@@ -75,8 +77,24 @@ class Color(object):
     DARK_BLUE = 0x0000AA
     DARK_RED = 0x800000
 
-    colors = (BLACK, WHITE, RED, YELLOW, GREEN, ORANGE, BLUE, PURPLE, PINK, GRAY,
-              LIGHT_GRAY, BROWN, DARK_GREEN, TURQUOISE, DARK_BLUE, DARK_RED)
+    colors = (
+        BLACK,
+        WHITE,
+        RED,
+        YELLOW,
+        GREEN,
+        ORANGE,
+        BLUE,
+        PURPLE,
+        PINK,
+        GRAY,
+        LIGHT_GRAY,
+        BROWN,
+        DARK_GREEN,
+        TURQUOISE,
+        DARK_BLUE,
+        DARK_RED,
+    )
 
     def __init__(self):
         pass
@@ -88,6 +106,7 @@ class Vec2D(tuple):
     May be useful for turtle graphics programs also.
     Derived from tuple, so a vector is a tuple!
     """
+
     # Provides (for a, b vectors, k number):
     #     a+b vector addition
     #     a-b vector subtraction
@@ -103,7 +122,7 @@ class Vec2D(tuple):
 
     def __mul__(self, other):
         if isinstance(other, Vec2D):
-            return self[0] * other[0]+self[1] * other[1]
+            return self[0] * other[0] + self[1] * other[1]
         return Vec2D(self[0] * other, self[1] * other)
 
     def __rmul__(self, other):
@@ -118,7 +137,7 @@ class Vec2D(tuple):
         return Vec2D(-self[0], -self[1])
 
     def __abs__(self):
-        return (self[0]**2 + self[1]**2)**0.5
+        return (self[0] ** 2 + self[1] ** 2) ** 0.5
 
     def rotate(self, angle):
         """Rotate self counterclockwise by angle.
@@ -137,8 +156,10 @@ class Vec2D(tuple):
     def __repr__(self):
         return "({:.2f},{:.2f})".format(self[0], self[1])
 
-class turtle(object):
+
+class turtle:
     """A Turtle that can be given commands to draw."""
+
     # pylint:disable=too-many-statements
     def __init__(self, display=None, scale=1):
 
@@ -168,18 +189,20 @@ class turtle(object):
         if self._w == self._h:
             i = 1
             while self._bgscale == 1:
-                if self._w/i < 128:
+                if self._w / i < 128:
                     self._bg_bitmap = displayio.Bitmap(i, i, 1)
-                    self._bgscale = self._w//i
+                    self._bgscale = self._w // i
                 i += 1
         else:
             self._bgscale = self._GCD(self._w, self._h)
-            self._bg_bitmap = displayio.Bitmap(self._w//self._bgscale, self._h//self._bgscale, 1)
+            self._bg_bitmap = displayio.Bitmap(
+                self._w // self._bgscale, self._h // self._bgscale, 1
+            )
         self._bg_palette = displayio.Palette(1)
         self._bg_palette[0] = Color.colors[self._bg_color]
-        self._bg_sprite = displayio.TileGrid(self._bg_bitmap,
-                                             pixel_shader=self._bg_palette,
-                                             x=0, y=0)
+        self._bg_sprite = displayio.TileGrid(
+            self._bg_bitmap, pixel_shader=self._bg_palette, x=0, y=0
+        )
         self._bg_group = displayio.Group(scale=self._bgscale, max_size=1)
         self._bg_group.append(self._bg_sprite)
         self._splash.append(self._bg_group)
@@ -195,9 +218,9 @@ class turtle(object):
         self._fg_palette.make_transparent(self._bg_color)
         for i, c in enumerate(Color.colors):
             self._fg_palette[i] = c
-        self._fg_sprite = displayio.TileGrid(self._fg_bitmap,
-                                             pixel_shader=self._fg_palette,
-                                             x=0, y=0)
+        self._fg_sprite = displayio.TileGrid(
+            self._fg_bitmap, pixel_shader=self._fg_palette, x=0, y=0
+        )
         self._fg_group = displayio.Group(scale=self._fg_scale, max_size=1)
         self._fg_group.append(self._fg_sprite)
         self._splash.append(self._fg_group)
@@ -215,9 +238,9 @@ class turtle(object):
             self._turtle_bitmap[i, 4 + i] = 1
             self._turtle_bitmap[4 + i, 7 - i] = 1
             self._turtle_bitmap[4 + i, i] = 1
-        self._turtle_sprite = displayio.TileGrid(self._turtle_bitmap,
-                                                 pixel_shader=self._turtle_palette,
-                                                 x=-100, y=-100)
+        self._turtle_sprite = displayio.TileGrid(
+            self._turtle_bitmap, pixel_shader=self._turtle_palette, x=-100, y=-100
+        )
 
         self._turtle_group = displayio.Group(scale=self._fg_scale, max_size=2)
         self._turtle_group.append(self._turtle_sprite)
@@ -238,6 +261,7 @@ class turtle(object):
         self._odb_tilegrid = None
         gc.collect()
         self._display.show(self._splash)
+
     # pylint:enable=too-many-statements
 
     def _drawturtle(self):
@@ -246,11 +270,11 @@ class turtle(object):
             self._turtle_sprite.y = int(self._y - 4)
         else:
             if self._turtle_odb is not None:
-                self._turtle_alt_sprite.x = int(self._x - self._turtle_odb.width//2)
-                self._turtle_alt_sprite.y = int(self._y - self._turtle_odb.height//2)
+                self._turtle_alt_sprite.x = int(self._x - self._turtle_odb.width // 2)
+                self._turtle_alt_sprite.y = int(self._y - self._turtle_odb.height // 2)
             else:
-                self._turtle_alt_sprite.x = int(self._x - self._turtle_pic[0]//2)
-                self._turtle_alt_sprite.y = int(self._y - self._turtle_pic[1]//2)
+                self._turtle_alt_sprite.x = int(self._x - self._turtle_pic[0] // 2)
+                self._turtle_alt_sprite.y = int(self._y - self._turtle_pic[1] // 2)
 
     ###########################################################################
     # Move and draw
@@ -261,10 +285,13 @@ class turtle(object):
         :param distance: how far to move (integer or float)
         """
         p = self.pos()
-        angle = (self._angleOffset + self._angleOrient*self._heading) % self._fullcircle
+        angle = (
+            self._angleOffset + self._angleOrient * self._heading
+        ) % self._fullcircle
         x1 = p[0] + math.sin(math.radians(angle)) * distance
         y1 = p[1] + math.cos(math.radians(angle)) * distance
         self.goto(x1, y1)
+
     fd = forward
 
     def backward(self, distance):
@@ -275,6 +302,7 @@ class turtle(object):
         """
 
         self.forward(-distance)
+
     bk = backward
     back = backward
 
@@ -289,6 +317,7 @@ class turtle(object):
             self._turn(angle)
         else:
             self._turn(-angle)
+
     rt = right
 
     def left(self, angle):
@@ -302,6 +331,7 @@ class turtle(object):
             self._turn(-angle)
         else:
             self._turn(angle)
+
     lt = left
 
     # pylint:disable=too-many-branches,too-many-statements
@@ -322,7 +352,7 @@ class turtle(object):
         x0 = self._x
         y0 = self._y
         if not self.isdown():
-            self._x = x1    # woot, we just skip ahead
+            self._x = x1  # woot, we just skip ahead
             self._y = y1
             self._drawturtle()
             return
@@ -346,7 +376,7 @@ class turtle(object):
             ystep = 1
         step = 1
         if self._speed > 0:
-            ts = (((11-self._speed)*0.00020)*(self._speed+0.5))
+            ts = ((11 - self._speed) * 0.00020) * (self._speed + 0.5)
         else:
             ts = 0
 
@@ -382,6 +412,7 @@ class turtle(object):
             else:
                 x0 += 1
         self._drawturtle()
+
     setpos = goto
     setposition = goto
     # pylint:enable=too-many-branches,too-many-statements
@@ -418,6 +449,7 @@ class turtle(object):
 
         """
         self._turn(to_angle - self._heading)
+
     seth = setheading
 
     def home(self):
@@ -437,7 +469,9 @@ class turtle(object):
             except IndexError:
                 pass
         r = self._pensize // 2 + 1
-        angle = (self._angleOffset + self._angleOrient*self._heading - 90) % self._fullcircle
+        angle = (
+            self._angleOffset + self._angleOrient * self._heading - 90
+        ) % self._fullcircle
         sin = math.sin(math.radians(angle))
         cos = math.cos(math.radians(angle))
         x0 = x + sin * r
@@ -488,12 +522,12 @@ class turtle(object):
                 j = -1 if y1 < y0 else 1
                 if steep:
                     try:
-                        self._fg_bitmap[int(y0+j), int(x0)] = c
+                        self._fg_bitmap[int(y0 + j), int(x0)] = c
                     except IndexError:
                         pass
                 else:
                     try:
-                        self._fg_bitmap[int(x0), int(y0+j)] = c
+                        self._fg_bitmap[int(x0), int(y0 + j)] = c
                     except IndexError:
                         pass
             err -= dy
@@ -504,6 +538,7 @@ class turtle(object):
                 x0 -= 1
             else:
                 x0 += 1
+
     # pylint:enable=too-many-locals, too-many-statements, too-many-branches
 
     def circle(self, radius, extent=None, steps=None):
@@ -532,15 +567,15 @@ class turtle(object):
         if extent is None:
             extent = self._fullcircle
         if steps is None:
-            frac = abs(extent)/self._fullcircle
-            steps = int(min(3+abs(radius)/4.0, 12.0)*frac)*4
+            frac = abs(extent) / self._fullcircle
+            steps = int(min(3 + abs(radius) / 4.0, 12.0) * frac) * 4
         w = extent / steps
         w2 = 0.5 * w
-        l = radius * math.sin(w*math.pi/180.0*self._degreesPerAU)
+        l = radius * math.sin(w * math.pi / 180.0 * self._degreesPerAU)
         if radius < 0:
             l, w, w2 = -l, -w, -w2
         self.left(w2)
-        for _ in range(steps-1):
+        for _ in range(steps - 1):
             self.forward(l)
             self.left(w)
         # rounding error correction on the last step
@@ -575,10 +610,11 @@ class turtle(object):
         """
         if speed is None:
             return self._speed
-        elif speed > 10 or speed < 1:
+        if speed > 10 or speed < 1:
             self._speed = 0
         else:
             self._speed = speed
+
     # pylint:enable=inconsistent-return-statements
 
     def dot(self, size=None, color=None):
@@ -614,7 +650,6 @@ class turtle(object):
             self._plot(self._x, self._y, color)
             self._pensize = pensize
 
-
     def stamp(self, bitmap=None, palette=None):
         """
         Stamp a copy of the turtle shape onto the canvas at the current
@@ -627,25 +662,32 @@ class turtle(object):
         s_id = len(self._stamps)
         if self._turtle_pic is None:
             # easy.
-            new_stamp = displayio.TileGrid(self._turtle_bitmap,
-                                           pixel_shader=self._turtle_palette,
-                                           x=int(self._x-self._turtle_bitmap.width//2),
-                                           y=int(self._y - self._turtle_bitmap.height // 2))
+            new_stamp = displayio.TileGrid(
+                self._turtle_bitmap,
+                pixel_shader=self._turtle_palette,
+                x=int(self._x - self._turtle_bitmap.width // 2),
+                y=int(self._y - self._turtle_bitmap.height // 2),
+            )
         elif self._turtle_odb is not None:
             # odb bitmap
-            new_stamp = displayio.TileGrid(self._turtle_odb,
-                                           pixel_shader=displayio.ColorConverter(),
-                                           x=int(self._x-self._turtle_odb.width//2),
-                                           y=int(self._y - self._turtle_odb.height // 2))
+            new_stamp = displayio.TileGrid(
+                self._turtle_odb,
+                pixel_shader=displayio.ColorConverter(),
+                x=int(self._x - self._turtle_odb.width // 2),
+                y=int(self._y - self._turtle_odb.height // 2),
+            )
             self._turtle_odb_use += 1
         else:
             if bitmap is None:
                 raise RuntimeError("a bitmap must be provided")
             if palette is None:
                 raise RuntimeError("a palette must be provided")
-            new_stamp = displayio.TileGrid(bitmap, pixel_shader=palette,
-                                           x=int(self._x-bitmap.width//2),
-                                           y=int(self._y - bitmap.height // 2))
+            new_stamp = displayio.TileGrid(
+                bitmap,
+                pixel_shader=palette,
+                x=int(self._x - bitmap.width // 2),
+                y=int(self._y - bitmap.height // 2),
+            )
         self._fg_addon_group.append(new_stamp)
         if self._turtle_odb is not None:
             self._stamps[s_id] = (new_stamp, self._turtle_odb_file)
@@ -701,6 +743,7 @@ class turtle(object):
     def pos(self):
         """Return the turtle's current location (x,y) (as a Vec2D vector)."""
         return Vec2D(self._x - self._w // 2, self._h // 2 - self._y)
+
     position = pos
 
     def towards(self, x1, y1=None):
@@ -718,9 +761,9 @@ class turtle(object):
             x1 = x1[0]
         x0, y0 = self.pos()
 
-        result = math.degrees(math.atan2(x1-x0, y1-y0))
+        result = math.degrees(math.atan2(x1 - x0, y1 - y0))
         result /= self._degreesPerAU
-        return (self._angleOffset + self._angleOrient*result) % self._fullcircle
+        return (self._angleOffset + self._angleOrient * result) % self._fullcircle
 
     def xcor(self):
         """Return the turtle's x coordinate."""
@@ -749,7 +792,7 @@ class turtle(object):
             y1 = x1[1]
             x1 = x1[0]
         x0, y0 = self.pos()
-        return math.sqrt((x0-x1) ** 2 + (y0 - y1) ** 2)
+        return math.sqrt((x0 - x1) ** 2 + (y0 - y1) ** 2)
 
     ###########################################################################
     # Setting and measurement
@@ -757,11 +800,11 @@ class turtle(object):
     def _setDegreesPerAU(self, fullcircle):
         """Helper function for degrees() and radians()"""
         self._fullcircle = fullcircle
-        self._degreesPerAU = 360/fullcircle
+        self._degreesPerAU = 360 / fullcircle
         if self._logomode:
             self._angleOffset = 0
         else:
-            self._angleOffset = -fullcircle/4
+            self._angleOffset = -fullcircle / 4
 
     def degrees(self, fullcircle=360):
         """Set angle measurement units, i.e. set number of "degrees" for
@@ -775,7 +818,7 @@ class turtle(object):
     def radians(self):
         """Set the angle measurement units to radians.
         Equivalent to degrees(2*math.pi)."""
-        self._setDegreesPerAU(2*math.pi)
+        self._setDegreesPerAU(2 * math.pi)
 
     def mode(self, mode=None):
         """
@@ -791,7 +834,7 @@ class turtle(object):
         if mode == "standard":
             self._logomode = False
             self._angleOrient = -1
-            self._angleOffset = self._fullcircle/4
+            self._angleOffset = self._fullcircle / 4
         elif mode == "logo":
             self._logomode = True
             self._angleOrient = 1
@@ -820,12 +863,14 @@ class turtle(object):
     def pendown(self):
         """Pull the pen down - drawing when moving."""
         self._penstate = True
+
     pd = pendown
     down = pendown
 
     def penup(self):
         """Pull the pen up - no drawing when moving."""
         self._penstate = False
+
     pu = penup
     up = penup
 
@@ -844,6 +889,7 @@ class turtle(object):
         if width is not None:
             self._pensize = width
         return self._pensize
+
     width = pensize
 
     ###########################################################################
@@ -853,6 +899,7 @@ class turtle(object):
 
     def _color_to_pencolor(self, c):
         return Color.colors.index(c)
+
     # pylint:enable=no-self-use
 
     def pencolor(self, c=None):
@@ -935,14 +982,17 @@ class turtle(object):
                 self._bg_pic = None
                 self._bg_pic_filename = ""
         else:
-            self._bg_pic = open(picname, 'rb')
+            self._bg_pic = open(picname, "rb")
             odb = displayio.OnDiskBitmap(self._bg_pic)
-            self._odb_tilegrid = displayio.TileGrid(odb, pixel_shader=displayio.ColorConverter())
+            self._odb_tilegrid = displayio.TileGrid(
+                odb, pixel_shader=displayio.ColorConverter()
+            )
             self._bg_addon_group.append(self._odb_tilegrid)
             self._bg_pic_filename = picname
             # centered
-            self._odb_tilegrid.y = ((self._h*self._fg_scale)//2) - (odb.height//2)
-            self._odb_tilegrid.x = ((self._w*self._fg_scale)//2) - (odb.width//2)
+            self._odb_tilegrid.y = ((self._h * self._fg_scale) // 2) - (odb.height // 2)
+            self._odb_tilegrid.x = ((self._w * self._fg_scale) // 2) - (odb.width // 2)
+
     # pylint:enable=inconsistent-return-statements
 
     ###########################################################################
@@ -961,8 +1011,6 @@ class turtle(object):
         self.setheading(0)
         self.pensize(1)
         self.pencolor(Color.WHITE)
-
-
 
     def clear(self):
         """Delete the turtle's drawings from the screen. Do not move turtle."""
@@ -988,6 +1036,7 @@ class turtle(object):
             self._turtle_group.append(self._turtle_sprite)
         else:
             self._turtle_group.append(self._turtle_alt_sprite)
+
     st = showturtle
 
     def hideturtle(self):
@@ -996,6 +1045,7 @@ class turtle(object):
         if not self._turtle_group:
             return
         self._turtle_group.pop()
+
     ht = hideturtle
 
     def isvisible(self):
@@ -1016,22 +1066,21 @@ class turtle(object):
         if source is None:
             if self._turtle_pic is None:
                 return
-            else:
-                if self._turtle_group:
-                    self._turtle_group.remove(self._turtle_alt_sprite)
-                    self._turtle_group.append(self._turtle_sprite)
-                self._turtle_alt_sprite = None
-                if self._turtle_odb is not None:
-                    self._turtle_odb_use -= 1
-                    self._turtle_odb = None
-                if self._turtle_odb_file is not None:
-                    if self._turtle_odb_use == 0:
-                        self._turtle_odb_file.close()
-                    self._turtle_odb_file = None
-                self._turtle_pic = None
-                self._drawturtle()
-                return
-        elif isinstance(source, str):
+            if self._turtle_group:
+                self._turtle_group.remove(self._turtle_alt_sprite)
+                self._turtle_group.append(self._turtle_sprite)
+            self._turtle_alt_sprite = None
+            if self._turtle_odb is not None:
+                self._turtle_odb_use -= 1
+                self._turtle_odb = None
+            if self._turtle_odb_file is not None:
+                if self._turtle_odb_use == 0:
+                    self._turtle_odb_file.close()
+                self._turtle_odb_file = None
+            self._turtle_pic = None
+            self._drawturtle()
+            return
+        if isinstance(source, str):
             visible = self.isvisible()
             if self._turtle_pic is not None:
                 if self._turtle_group:
@@ -1043,7 +1092,7 @@ class turtle(object):
                     self._turtle_odb_file = None
                     self._turtle_odb_use -= 1
                 self._turtle_pic = None
-            self._turtle_odb_file = open(source, 'rb')
+            self._turtle_odb_file = open(source, "rb")
             try:
                 self._turtle_odb = displayio.OnDiskBitmap(self._turtle_odb_file)
             except:
@@ -1055,8 +1104,9 @@ class turtle(object):
                 raise
             self._turtle_odb_use += 1
             self._turtle_pic = True
-            self._turtle_alt_sprite = displayio.TileGrid(self._turtle_odb,
-                                                         pixel_shader=displayio.ColorConverter())
+            self._turtle_alt_sprite = displayio.TileGrid(
+                self._turtle_odb, pixel_shader=displayio.ColorConverter()
+            )
 
             if self._turtle_group:
                 self._turtle_group.pop()
@@ -1076,7 +1126,10 @@ class turtle(object):
                 self._turtle_group.append(self._turtle_alt_sprite)
             self._drawturtle()
         else:
-            raise TypeError('Argument must be "str", a "displayio.TileGrid" or nothing.')
+            raise TypeError(
+                'Argument must be "str", a "displayio.TileGrid" or nothing.'
+            )
+
     # pylint:enable=too-many-statements, too-many-branches
 
     ###########################################################################
@@ -1087,15 +1140,17 @@ class turtle(object):
             return
         if not self.isdown() or self._pensize == 1:
             self._heading += angle
-            self._heading %= self._fullcircle         # wrap
+            self._heading %= self._fullcircle  # wrap
             return
         start_angle = self._heading
-        steps = math.ceil((self._pensize*2)*3.1415*(abs(angle)/self._fullcircle))
+        steps = math.ceil(
+            (self._pensize * 2) * 3.1415 * (abs(angle) / self._fullcircle)
+        )
         if steps < 1:
             d_angle = angle
             steps = 1
         else:
-            d_angle = angle/steps
+            d_angle = angle / steps
 
         if d_angle > 0:
             d_angle = math.ceil(d_angle)
@@ -1107,16 +1162,16 @@ class turtle(object):
                 self._heading += angle
             else:
                 self._heading -= angle
-            self._heading %= self._fullcircle         # wrap
+            self._heading %= self._fullcircle  # wrap
             return
 
-        if abs(angle-steps*d_angle) >= abs(d_angle):
-            steps += abs(angle-steps*d_angle) // abs(d_angle)
+        if abs(angle - steps * d_angle) >= abs(d_angle):
+            steps += abs(angle - steps * d_angle) // abs(d_angle)
 
         self._plot(self._x, self._y, self._pencolor)
         for _ in range(steps):
             self._heading += d_angle
-            self._heading %= self._fullcircle         # wrap
+            self._heading %= self._fullcircle  # wrap
             self._plot(self._x, self._y, self._pencolor)
 
         # error correction

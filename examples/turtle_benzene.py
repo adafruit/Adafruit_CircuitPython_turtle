@@ -12,7 +12,7 @@ turtle.pendown()
 start = turtle.pos()
 
 for x in range(benzsize):
-    turtle.pencolor(colors[x%6])
+    turtle.pencolor(colors[x % 6])
     turtle.forward(x)
     turtle.left(59)
 
