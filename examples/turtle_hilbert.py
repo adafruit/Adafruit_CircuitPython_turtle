@@ -1,6 +1,7 @@
 import board
 from adafruit_turtle import turtle
 
+
 def hilbert2(step, rule, angle, depth, t):
     if depth > 0:
         a = lambda: hilbert2(step, "a", angle, depth - 1, t)
@@ -32,6 +33,7 @@ def hilbert2(step, rule, angle, depth, t):
             forward()
             a()
             right()
+
 
 turtle = turtle(board.DISPLAY)
 turtle.penup()

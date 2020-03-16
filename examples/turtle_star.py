@@ -10,7 +10,7 @@ turtle.pencolor(Color.BLUE)
 turtle.setheading(90)
 
 turtle.penup()
-turtle.goto(-starsize/2, 0)
+turtle.goto(-starsize / 2, 0)
 turtle.pendown()
 
 start = turtle.pos()
