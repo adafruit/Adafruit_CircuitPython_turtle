@@ -1,29 +1,9 @@
-# Based on turtle.py, a Tkinter based turtle graphics module for Python
-# Version 1.1b - 4. 5. 2009
-# Copyright (C) 2006 - 2010  Gregor Lingl
-# email: glingl@aon.at
+# SPDX-FileCopyrightText: 2006-2010 Gregor Lingl for Adafruit Industries
+# SPDX-FileCopyrightText: 2019 LadyAda for Adafruit Industries
+# SPDX-FileCopyrightText: 2021 Dave Astels for Adafruit Industries
 #
-# The MIT License (MIT)
-#
-# Copyright (c) 2019 LadyAda and Dave Astels for Adafruit Industries
-#
-# Permission is hereby granted, free of charge, to any person obtaining a copy
-# of this software and associated documentation files (the "Software"), to deal
-# in the Software without restriction, including without limitation the rights
-# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-# copies of the Software, and to permit persons to whom the Software is
-# furnished to do so, subject to the following conditions:
-#
-# The above copyright notice and this permission notice shall be included in
-# all copies or substantial portions of the Software.
-#
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-# THE SOFTWARE.
+# SPDX-License-Identifier: MIT
+
 """
 `adafruit_turtle`
 ================================================================================
@@ -115,7 +95,7 @@ class Vec2D(tuple):
     #     |a| absolute value of a
     #     a.rotate(angle) rotation
     def __init__(self, x, y):
-        super(Vec2D, self).__init__((x, y))
+        super().__init__((x, y))
 
     def __add__(self, other):
         return Vec2D(self[0] + other[0], self[1] + other[1])
@@ -168,8 +148,10 @@ class turtle:
         else:
             try:
                 self._display = board.DISPLAY
-            except AttributeError:
-                raise RuntimeError("No display available. One must be provided.")
+            except AttributeError as err:
+                raise RuntimeError(
+                    "No display available. One must be provided."
+                ) from err
 
         self._w = self._display.width
         self._h = self._display.height
