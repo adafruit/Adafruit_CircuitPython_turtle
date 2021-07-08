@@ -166,7 +166,7 @@ class turtle:
         self._angleOffset = 0
         self._bg_color = 0
 
-        self._splash = displayio.Group(max_size=5)
+        self._splash = displayio.Group()
         self._bgscale = 1
         if self._w == self._h:
             i = 1
@@ -185,11 +185,11 @@ class turtle:
         self._bg_sprite = displayio.TileGrid(
             self._bg_bitmap, pixel_shader=self._bg_palette, x=0, y=0
         )
-        self._bg_group = displayio.Group(scale=self._bgscale, max_size=1)
+        self._bg_group = displayio.Group(scale=self._bgscale)
         self._bg_group.append(self._bg_sprite)
         self._splash.append(self._bg_group)
         # group to add background pictures (and/or user-defined stuff)
-        self._bg_addon_group = displayio.Group(max_size=6)
+        self._bg_addon_group = displayio.Group()
         self._splash.append(self._bg_addon_group)
         self._fg_scale = scale
         self._w = self._w // self._fg_scale
@@ -203,11 +203,11 @@ class turtle:
         self._fg_sprite = displayio.TileGrid(
             self._fg_bitmap, pixel_shader=self._fg_palette, x=0, y=0
         )
-        self._fg_group = displayio.Group(scale=self._fg_scale, max_size=1)
+        self._fg_group = displayio.Group(scale=self._fg_scale)
         self._fg_group.append(self._fg_sprite)
         self._splash.append(self._fg_group)
         # group to add text and/or user defined stuff
-        self._fg_addon_group = displayio.Group(max_size=6)
+        self._fg_addon_group = displayio.Group()
         self._splash.append(self._fg_addon_group)
 
         self._turtle_bitmap = displayio.Bitmap(9, 9, 2)
@@ -224,7 +224,7 @@ class turtle:
             self._turtle_bitmap, pixel_shader=self._turtle_palette, x=-100, y=-100
         )
 
-        self._turtle_group = displayio.Group(scale=self._fg_scale, max_size=2)
+        self._turtle_group = displayio.Group(scale=self._fg_scale)
         self._turtle_group.append(self._turtle_sprite)
         self._splash.append(self._turtle_group)
         self._penstate = False
