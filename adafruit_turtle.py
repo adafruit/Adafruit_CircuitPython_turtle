@@ -638,6 +638,9 @@ class turtle:
         turtle position. Return a stamp_id for that stamp, which can be used to
         delete it by calling clearstamp(stamp_id).
         """
+        # The restriction on max_size in displayio.Group has been removed.
+        # For now, leave this with a limit of 6 so as not to break any
+        # deployed code.
         if len(self._fg_addon_group) >= 6:
             print("Addon group full")
             return -1
@@ -654,7 +657,11 @@ class turtle:
             # odb bitmap
             new_stamp = displayio.TileGrid(
                 self._turtle_odb,
-                pixel_shader=displayio.ColorConverter(),
+                pixel_shader=getattr(
+                    self._turtle_odb, "pixel_shader", displayio.ColorConverter()
+                ),
+                # TODO: Once CP6 is no longer supported, replace the above line with below
+                # pixel_shader=self._turtle_odb.pixel_shader,
                 x=int(self._x - self._turtle_odb.width // 2),
                 y=int(self._y - self._turtle_odb.height // 2),
             )
@@ -967,7 +974,10 @@ class turtle:
             self._bg_pic = open(picname, "rb")
             odb = displayio.OnDiskBitmap(self._bg_pic)
             self._odb_tilegrid = displayio.TileGrid(
-                odb, pixel_shader=displayio.ColorConverter()
+                odb,
+                pixel_shader=getattr(odb, "pixel_shader", displayio.ColorConverter()),
+                # TODO: Once CP6 is no longer supported, replace the above line with below
+                # pixel_shader=odb.pixel_shader,
             )
             self._bg_addon_group.append(self._odb_tilegrid)
             self._bg_pic_filename = picname
@@ -1087,7 +1097,12 @@ class turtle:
             self._turtle_odb_use += 1
             self._turtle_pic = True
             self._turtle_alt_sprite = displayio.TileGrid(
-                self._turtle_odb, pixel_shader=displayio.ColorConverter()
+                self._turtle_odb,
+                pixel_shader=getattr(
+                    self._turtle_odb, "pixel_shader", displayio.ColorConverter()
+                ),
+                # TODO: Once CP6 is no longer supported, replace the above line with below
+                # pixel_shader=self._turtle_odb.pixel_shader,
             )
 
             if self._turtle_group:
