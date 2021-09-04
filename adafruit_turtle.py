@@ -421,11 +421,14 @@ class turtle:
         """Set the orientation of the turtle to to_angle. Here are some common
         directions in degrees:
 
-        standard mode | logo mode
-        0 - east | 0 - north
-        90 - north | 90 - east
-        180 - west | 180 - south
-        270 - south | 270 - west
+        =====  =============  ==========
+        angle  standard mode  logo mode
+        =====  =============  ==========
+        0      east           north
+        90     north          east
+        180    west           south
+        270    south          west
+        =====  =============  ==========
 
         :param to_angle: the new turtle heading
 
