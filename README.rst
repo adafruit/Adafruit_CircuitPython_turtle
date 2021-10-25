@@ -81,6 +81,11 @@ Usage Example
     while True:
         pass
 
+Documentation
+=============
+
+API documentation for this library can be found on `Read the Docs <https://circuitpython.readthedocs.io/projects/turtle/en/latest/>`_.
+
 Contributing
 ============
 
