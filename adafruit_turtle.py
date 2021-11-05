@@ -715,7 +715,7 @@ class turtle:
 
         """
         i = 1
-        for sid in self._stamps:
+        for sid in self._stamps:  # pylint: disable=consider-using-dict-items
             if self._stamps[sid] is not None:
                 self.clearstamp(sid)
                 if n is not None and i >= n:
@@ -967,8 +967,8 @@ class turtle:
                 self._bg_pic = None
                 self._bg_pic_filename = ""
         else:
-            self._bg_pic = open(picname, "rb")
-            odb = displayio.OnDiskBitmap(self._bg_pic)
+            with open(picname, "rb") as self._bg_pic:
+                odb = displayio.OnDiskBitmap(self._bg_pic)
             self._odb_tilegrid = displayio.TileGrid(
                 odb, pixel_shader=displayio.ColorConverter()
             )
@@ -1077,7 +1077,9 @@ class turtle:
                     self._turtle_odb_file = None
                     self._turtle_odb_use -= 1
                 self._turtle_pic = None
-            self._turtle_odb_file = open(source, "rb")
+            self._turtle_odb_file = open(  # pylint: disable=consider-using-with
+                source, "rb"
+            )
             try:
                 self._turtle_odb = displayio.OnDiskBitmap(self._turtle_odb_file)
             except:
