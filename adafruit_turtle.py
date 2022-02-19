@@ -691,8 +691,7 @@ class turtle:
                 if isinstance(self._stamps[stampid], tuple):
                     self._fg_addon_group.remove(self._stamps[stampid][0])
                     self._turtle_odb_use -= 1
-                    if self._turtle_odb_use == 0:
-                        self._stamps[stampid][1].close()
+
                 else:
                     self._fg_addon_group.remove(self._stamps[stampid])
                 self._stamps[stampid] = None
@@ -960,7 +959,6 @@ class turtle:
             if self._bg_pic is not None:
                 self._bg_addon_group.remove(self._odb_tilegrid)
                 self._odb_tilegrid = None
-                self._bg_pic.close()
                 self._bg_pic = None
                 self._bg_pic_filename = ""
         else:
@@ -1057,8 +1055,6 @@ class turtle:
                 self._turtle_odb_use -= 1
                 self._turtle_odb = None
             if self._turtle_odb_file is not None:
-                if self._turtle_odb_use == 0:
-                    self._turtle_odb_file.close()
                 self._turtle_odb_file = None
             self._turtle_pic = None
             self._drawturtle()
@@ -1071,17 +1067,13 @@ class turtle:
                 self._turtle_alt_sprite = None
                 self._turtle_odb = None
                 if not isinstance(self._turtle_pic, tuple):
-                    self._turtle_odb_file.close()
                     self._turtle_odb_file = None
                     self._turtle_odb_use -= 1
                 self._turtle_pic = None
-            self._turtle_odb_file = open(  # pylint: disable=consider-using-with
-                source, "rb"
-            )
+
             try:
-                self._turtle_odb = displayio.OnDiskBitmap(self._turtle_odb_file)
+                self._turtle_odb = displayio.OnDiskBitmap(source)
             except:
-                self._turtle_odb_file.close()
                 self._turtle_odb_file = None
                 self._turtle_pic = None
                 if visible:
@@ -1103,8 +1095,6 @@ class turtle:
             if self._turtle_pic is not None:
                 if self._turtle_odb_file is not None:
                     self._turtle_odb_use -= 1
-                    if self._turtle_odb_use == 0:
-                        self._turtle_odb_file.close()
             self._turtle_pic = dimensions
             self._turtle_alt_sprite = source
             if self._turtle_group:
