@@ -35,7 +35,7 @@ import displayio
 
 try:
     import board
-except:
+except NotImplementedError:
     print("[adafruit-turtle.py]: Couldn't import board module.")
 
 __version__ = "0.0.0+auto.0"
@@ -101,6 +101,9 @@ class Vec2D:
     #     a.rotate(angle) rotation
     def __new__(cls, x, y):
         return (x, y)
+
+    def __getitem__(self, index):
+        return getattr(self, index)
 
     def __add__(self, other):
         return Vec2D(self[0] + other[0], self[1] + other[1])
