@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: 2006-2010 Gregor Lingl for Adafruit Industries
 # SPDX-FileCopyrightText: 2019 LadyAda for Adafruit Industries
 # SPDX-FileCopyrightText: 2021 Dave Astels for Adafruit Industries
+# SPDX-FileCopyrightText: 2022 Carsten Thue-Bludworth for Adafruit Industries
 #
 # SPDX-License-Identifier: MIT
 
