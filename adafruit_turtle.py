@@ -31,6 +31,7 @@ import gc
 import math
 import time
 import displayio
+
 try:
     import board
 except:
@@ -83,7 +84,7 @@ class Color:
         pass
 
 
-class Vec2D():
+class Vec2D:
     """A 2 dimensional vector class, used as a helper class
     for implementing turtle graphics.
     May be useful for turtle graphics programs also.
