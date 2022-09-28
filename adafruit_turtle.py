@@ -30,8 +30,11 @@ Implementation Notes
 import gc
 import math
 import time
-import board
 import displayio
+try:
+    import board
+except:
+    print("[adafruit-turtle.py]: Couldn't import board module.")
 
 __version__ = "0.0.0+auto.0"
 __repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_turtle.git"
@@ -80,7 +83,7 @@ class Color:
         pass
 
 
-class Vec2D(tuple):
+class Vec2D():
     """A 2 dimensional vector class, used as a helper class
     for implementing turtle graphics.
     May be useful for turtle graphics programs also.
@@ -94,8 +97,8 @@ class Vec2D(tuple):
     #     k*a and a*k multiplication with scalar
     #     |a| absolute value of a
     #     a.rotate(angle) rotation
-    def __init__(self, x, y):
-        super().__init__((x, y))
+    def __new__(cls, x, y):
+        return (x, y)
 
     def __add__(self, other):
         return Vec2D(self[0] + other[0], self[1] + other[1])
