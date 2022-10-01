@@ -94,7 +94,6 @@ class Vec2D:
     #     |a| absolute value of a
     #     a.rotate(angle) rotation
     def __init__(self, x, y):
-        # super().__init__()
         self.values = (x, y)
 
     def __getitem__(self, index):
