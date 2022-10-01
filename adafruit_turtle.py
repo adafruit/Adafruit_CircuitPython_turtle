@@ -30,7 +30,6 @@ Implementation Notes
 import gc
 import math
 import time
-import board
 import displayio
 
 __version__ = "0.0.0+auto.0"
@@ -151,6 +150,7 @@ class turtle:
             self._display = display
         else:
             try:
+                import board
                 self._display = board.DISPLAY
             except AttributeError as err:
                 raise RuntimeError(
