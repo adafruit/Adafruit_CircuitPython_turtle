@@ -150,7 +150,9 @@ class turtle:
             self._display = display
         else:
             try:
+                # pylint: disable=import-outside-toplevel
                 import board
+
                 self._display = board.DISPLAY
             except AttributeError as err:
                 raise RuntimeError(
@@ -272,8 +274,8 @@ class turtle:
         """
         p = self.pos()
         angle = (
-                        self._angleOffset + self._angleOrient * self._heading
-                ) % self._fullcircle
+            self._angleOffset + self._angleOrient * self._heading
+        ) % self._fullcircle
         x1 = p[0] + math.sin(math.radians(angle)) * distance
         y1 = p[1] + math.cos(math.radians(angle)) * distance
         self.goto(x1, y1)
@@ -460,8 +462,8 @@ class turtle:
                 pass
         r = self._pensize // 2 + 1
         angle = (
-                        self._angleOffset + self._angleOrient * self._heading - 90
-                ) % self._fullcircle
+            self._angleOffset + self._angleOrient * self._heading - 90
+        ) % self._fullcircle
         sin = math.sin(math.radians(angle))
         cos = math.cos(math.radians(angle))
         x0 = x + sin * r
