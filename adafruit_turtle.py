@@ -80,7 +80,7 @@ class Color:
         pass
 
 
-class Vec2D(tuple):
+class Vec2D:
     """A 2 dimensional vector class, used as a helper class
     for implementing turtle graphics.
     May be useful for turtle graphics programs also.
@@ -95,7 +95,11 @@ class Vec2D(tuple):
     #     |a| absolute value of a
     #     a.rotate(angle) rotation
     def __init__(self, x, y):
-        super().__init__((x, y))
+        # super().__init__()
+        self.values = (x, y)
+
+    def __getitem__(self, index):
+        return self.values[index]
 
     def __add__(self, other):
         return Vec2D(self[0] + other[0], self[1] + other[1])
@@ -268,8 +272,8 @@ class turtle:
         """
         p = self.pos()
         angle = (
-            self._angleOffset + self._angleOrient * self._heading
-        ) % self._fullcircle
+                        self._angleOffset + self._angleOrient * self._heading
+                ) % self._fullcircle
         x1 = p[0] + math.sin(math.radians(angle)) * distance
         y1 = p[1] + math.cos(math.radians(angle)) * distance
         self.goto(x1, y1)
@@ -397,6 +401,7 @@ class turtle:
 
     setpos = goto
     setposition = goto
+
     # pylint:enable=too-many-branches,too-many-statements
 
     def setx(self, x):
@@ -455,8 +460,8 @@ class turtle:
                 pass
         r = self._pensize // 2 + 1
         angle = (
-            self._angleOffset + self._angleOrient * self._heading - 90
-        ) % self._fullcircle
+                        self._angleOffset + self._angleOrient * self._heading - 90
+                ) % self._fullcircle
         sin = math.sin(math.radians(angle))
         cos = math.cos(math.radians(angle))
         x0 = x + sin * r
