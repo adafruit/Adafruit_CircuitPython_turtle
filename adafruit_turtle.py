@@ -32,11 +32,6 @@ import math
 import time
 import displayio
 
-try:
-    import board
-except NotImplementedError:
-    print("[adafruit-turtle.py]: Couldn't import board module.")
-
 __version__ = "0.0.0+auto.0"
 __repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_turtle.git"
 
@@ -98,11 +93,11 @@ class Vec2D:
     #     k*a and a*k multiplication with scalar
     #     |a| absolute value of a
     #     a.rotate(angle) rotation
-    def __new__(cls, x, y):
-        return (x, y)
+    def __init__(self, x, y):
+        self.values = (x, y)
 
     def __getitem__(self, index):
-        return getattr(self, index)
+        return self.values[index]
 
     def __add__(self, other):
         return Vec2D(self[0] + other[0], self[1] + other[1])
@@ -154,6 +149,9 @@ class turtle:
             self._display = display
         else:
             try:
+                # pylint: disable=import-outside-toplevel
+                import board
+
                 self._display = board.DISPLAY
             except AttributeError as err:
                 raise RuntimeError(
@@ -404,6 +402,7 @@ class turtle:
 
     setpos = goto
     setposition = goto
+
     # pylint:enable=too-many-branches,too-many-statements
 
     def setx(self, x):
