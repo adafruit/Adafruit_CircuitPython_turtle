@@ -30,7 +30,6 @@ Implementation Notes
 import gc
 import math
 import time
-import board
 import displayio
 
 __version__ = "0.0.0+auto.0"
@@ -80,7 +79,7 @@ class Color:
         pass
 
 
-class Vec2D(tuple):
+class Vec2D:
     """A 2 dimensional vector class, used as a helper class
     for implementing turtle graphics.
     May be useful for turtle graphics programs also.
@@ -95,7 +94,10 @@ class Vec2D(tuple):
     #     |a| absolute value of a
     #     a.rotate(angle) rotation
     def __init__(self, x, y):
-        super().__init__((x, y))
+        self.values = (x, y)
+
+    def __getitem__(self, index):
+        return self.values[index]
 
     def __add__(self, other):
         return Vec2D(self[0] + other[0], self[1] + other[1])
@@ -147,6 +149,9 @@ class turtle:
             self._display = display
         else:
             try:
+                # pylint: disable=import-outside-toplevel
+                import board
+
                 self._display = board.DISPLAY
             except AttributeError as err:
                 raise RuntimeError(
@@ -397,6 +402,7 @@ class turtle:
 
     setpos = goto
     setposition = goto
+
     # pylint:enable=too-many-branches,too-many-statements
 
     def setx(self, x):
