@@ -6,19 +6,21 @@
 import board
 from adafruit_turtle import turtle, Color
 
-generation_colors = [Color.RED, Color.BLUE, Color.GREEN]
+generation_colors = [Color.RED, Color.BLUE, Color.GREEN, Color.YELLOW]
 
 
 def f(side_length, depth, generation):
-    if depth != 0:
-        side = lambda: f(side_length / 3, depth - 1, generation + 1)
-        side()
-        turtle.left(60)
-        side()
-        turtle.right(120)
-        side()
-        turtle.left(60)
-        side()
+    if depth == 0:
+        turtle.forward(side_length)
+        return
+    side = lambda: f(side_length / 3, depth - 1, generation + 1)
+    side()
+    turtle.left(60)
+    side()
+    turtle.right(120)
+    side()
+    turtle.left(60)
+    side()
 
 
 def snowflake(num_generations, generation_color):
@@ -42,7 +44,7 @@ turtle.penup()
 turtle.goto(-1.5 * unit, unit)
 turtle.pendown()
 
-for generations in range(3):
+for generations in range(4):
     snowflake(generations, generation_colors[generations])
     turtle.right(120)
 
