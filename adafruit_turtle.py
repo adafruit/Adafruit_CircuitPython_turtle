@@ -583,7 +583,7 @@ class turtle:
         self.setheading(h)
 
     # pylint:disable=inconsistent-return-statements
-    def speed(self, speed: Optional[int] = None) -> int:
+    def speed(self, speed: Optional[int] = None) -> Optional[int]:
         """
         Set the turtle's speed to an integer value in the range 0..10. If no
         argument is given, return current speed.
@@ -605,12 +605,13 @@ class turtle:
 
         :param speed: the new turtle speed (0..10) or None
         """
-        if speed is not None:
-            if speed > 10 or speed < 1:
-                self._speed = 0
-            else:
-                self._speed = speed
-        return self._speed
+        if speed is None:
+            return self._speed
+        if speed > 10 or speed < 1:
+            self._speed = 0
+        else:
+            self._speed = speed
+        return None
 
     # pylint:enable=inconsistent-return-statements
 
