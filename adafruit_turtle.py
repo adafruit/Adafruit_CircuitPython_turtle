@@ -144,7 +144,6 @@ class turtle:
 
     # pylint:disable=too-many-statements
     def __init__(self, display=None, scale=1):
-
         if display:
             self._display = display
         else:
