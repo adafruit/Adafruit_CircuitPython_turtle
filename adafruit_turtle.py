@@ -34,7 +34,7 @@ import time
 import displayio
 
 try:
-    from typing import Any, Dict, List, Optional, Tuple, Union
+    from typing import List, Optional, Tuple, Union
 except ImportError:
     pass
 
@@ -149,7 +149,9 @@ class turtle:
     """A Turtle that can be given commands to draw."""
 
     # pylint:disable=too-many-statements
-    def __init__(self, display: Any = None, scale: float = 1) -> None:
+    def __init__(
+        self, display: Optional[displayio.Display] = None, scale: float = 1
+    ) -> None:
         if display:
             self._display = display
         else:
@@ -649,7 +651,11 @@ class turtle:
             self._plot(self._x, self._y, color)
             self._pensize = pensize
 
-    def stamp(self, bitmap: Optional[Any] = None, palette: Optional[Any] = None) -> int:
+    def stamp(
+        self,
+        bitmap: Optional[displayio.Bitmap] = None,
+        palette: Optional[displayio.Palette] = None,
+    ) -> int:
         """
         Stamp a copy of the turtle shape onto the canvas at the current
         turtle position. Return a stamp_id for that stamp, which can be used to
@@ -1056,7 +1062,9 @@ class turtle:
 
     # pylint:disable=too-many-statements, too-many-branches
     def changeturtle(
-        self, source: Optional[Union[displayio.TileGrid, str]] = None, dimensions: Tuple[int, int] = (12, 12)
+        self,
+        source: Optional[Union[displayio.TileGrid, str]] = None,
+        dimensions: Tuple[int, int] = (12, 12),
     ) -> None:
         """
         Change the turtle.
