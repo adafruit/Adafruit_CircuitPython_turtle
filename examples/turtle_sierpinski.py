@@ -10,7 +10,6 @@ def getMid(p1, p2):
 
 
 def triangle(points, depth):
-
     turtle.penup()
     turtle.goto(points[0][0], points[0][1])
     turtle.pendown()
