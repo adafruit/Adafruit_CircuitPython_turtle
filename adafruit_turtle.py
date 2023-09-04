@@ -23,6 +23,7 @@ Implementation Notes
 * Adafruit's Bus Device library:
   https://github.com/adafruit/Adafruit_CircuitPython_BusDevice
 """
+from __future__ import annotations
 
 # pylint:disable=too-many-public-methods, too-many-instance-attributes, invalid-name
 # pylint:disable=too-few-public-methods, too-many-lines, too-many-arguments
@@ -31,6 +32,11 @@ import gc
 import math
 import time
 import displayio
+
+try:
+    from typing import List, Optional, Tuple, Union
+except ImportError:
+    pass
 
 __version__ = "0.0.0+auto.0"
 __repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_turtle.git"
@@ -75,7 +81,7 @@ class Color:
         DARK_RED,
     )
 
-    def __init__(self):
+    def __init__(self) -> None:
         pass
 
 
@@ -93,35 +99,35 @@ class Vec2D:
     #     k*a and a*k multiplication with scalar
     #     |a| absolute value of a
     #     a.rotate(angle) rotation
-    def __init__(self, x, y):
+    def __init__(self, x: float, y: float) -> None:
         self.values = (x, y)
 
-    def __getitem__(self, index):
+    def __getitem__(self, index: int) -> float:
         return self.values[index]
 
-    def __add__(self, other):
+    def __add__(self, other: Vec2D) -> Vec2D:
         return Vec2D(self[0] + other[0], self[1] + other[1])
 
-    def __mul__(self, other):
+    def __mul__(self, other: Union[float, Vec2D]) -> Union[float, Vec2D]:
         if isinstance(other, Vec2D):
             return self[0] * other[0] + self[1] * other[1]
         return Vec2D(self[0] * other, self[1] * other)
 
-    def __rmul__(self, other):
+    def __rmul__(self, other: float) -> Optional[Vec2D]:
         if isinstance(other, (float, int)):
             return Vec2D(self[0] * other, self[1] * other)
         return None
 
-    def __sub__(self, other):
+    def __sub__(self, other: Vec2D) -> Vec2D:
         return Vec2D(self[0] - other[0], self[1] - other[1])
 
-    def __neg__(self):
+    def __neg__(self) -> Vec2D:
         return Vec2D(-self[0], -self[1])
 
-    def __abs__(self):
+    def __abs__(self) -> float:
         return (self[0] ** 2 + self[1] ** 2) ** 0.5
 
-    def rotate(self, angle):
+    def rotate(self, angle: float) -> Vec2D:
         """Rotate self counterclockwise by angle.
 
         :param angle: how much to rotate
@@ -132,10 +138,10 @@ class Vec2D:
         c, s = math.cos(angle), math.sin(angle)
         return Vec2D(self[0] * c + perp[0] * s, self[1] * c + perp[1] * s)
 
-    def __getnewargs__(self):
+    def __getnewargs__(self) -> Tuple[float, float]:
         return (self[0], self[1])
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return "({:.2f},{:.2f})".format(self[0], self[1])
 
 
@@ -143,7 +149,9 @@ class turtle:
     """A Turtle that can be given commands to draw."""
 
     # pylint:disable=too-many-statements
-    def __init__(self, display=None, scale=1):
+    def __init__(
+        self, display: Optional[displayio.Display] = None, scale: float = 1
+    ) -> None:
         if display:
             self._display = display
         else:
@@ -157,21 +165,21 @@ class turtle:
                     "No display available. One must be provided."
                 ) from err
 
-        self._w = self._display.width
-        self._h = self._display.height
+        self._w: int = self._display.width
+        self._h: int = self._display.height
         self._x = self._w // (2 * scale)
         self._y = self._h // (2 * scale)
         self._speed = 6
-        self._heading = 0
+        self._heading: float = 0
         self._logomode = True
         self._fullcircle = 360.0
         self._degreesPerAU = 1.0
         self._angleOrient = 1
-        self._angleOffset = 0
+        self._angleOffset: float = 0
         self._bg_color = 0
 
-        self._splash = displayio.Group()
-        self._bgscale = 1
+        self._splash: displayio.Group = displayio.Group()
+        self._bgscale: int = 1
         if self._w == self._h:
             i = 1
             while self._bgscale == 1:
@@ -195,7 +203,7 @@ class turtle:
         # group to add background pictures (and/or user-defined stuff)
         self._bg_addon_group = displayio.Group()
         self._splash.append(self._bg_addon_group)
-        self._fg_scale = scale
+        self._fg_scale: int = int(scale)
         self._w = self._w // self._fg_scale
         self._h = self._h // self._fg_scale
         self._fg_bitmap = displayio.Bitmap(self._w, self._h, len(Color.colors))
@@ -250,7 +258,7 @@ class turtle:
 
     # pylint:enable=too-many-statements
 
-    def _drawturtle(self):
+    def _drawturtle(self) -> None:
         if self._turtle_pic is None:
             self._turtle_sprite.x = int(self._x - 4)
             self._turtle_sprite.y = int(self._y - 4)
@@ -265,7 +273,7 @@ class turtle:
     ###########################################################################
     # Move and draw
 
-    def forward(self, distance):
+    def forward(self, distance: float) -> None:
         """Move the turtle forward by the specified distance, in the direction the turtle is headed.
 
         :param distance: how far to move (integer or float)
@@ -280,7 +288,7 @@ class turtle:
 
     fd = forward
 
-    def backward(self, distance):
+    def backward(self, distance: float) -> None:
         """Move the turtle backward by distance, opposite to the direction the turtle is headed.
         Does not change the turtle's heading.
 
@@ -292,7 +300,7 @@ class turtle:
     bk = backward
     back = backward
 
-    def right(self, angle):
+    def right(self, angle: float) -> None:
         """Turn turtle right by angle units. (Units are by default degrees,
         but can be set via the degrees() and radians() functions.)
         Angle orientation depends on the turtle mode, see mode().
@@ -306,7 +314,7 @@ class turtle:
 
     rt = right
 
-    def left(self, angle):
+    def left(self, angle: float) -> None:
         """Turn turtle left by angle units. (Units are by default degrees,
         but can be set via the degrees() and radians() functions.)
         Angle orientation depends on the turtle mode, see mode().
@@ -321,7 +329,9 @@ class turtle:
     lt = left
 
     # pylint:disable=too-many-branches,too-many-statements
-    def goto(self, x1, y1=None):
+    def goto(
+        self, x1: Union[float, Vec2D, Tuple[float, float]], y1: Optional[float] = None
+    ) -> None:
         """If y1 is None, x1 must be a pair of coordinates or an (x, y) tuple
 
         Move turtle to an absolute position. If the pen is down, draw line.
@@ -330,35 +340,34 @@ class turtle:
         :param x1: a number or a pair of numbers
         :param y1: a number or None
         """
-        if y1 is None:
-            y1 = x1[1]
-            x1 = x1[0]
-        x1 += self._w // 2
-        y1 = self._h // 2 - y1
+        yn: float = x1[1] if y1 is None else y1  # type: ignore
+        xn: float = x1[0] if y1 is None else x1  # type: ignore
+        xn += self._w // 2
+        yn = self._h // 2 - yn
         x0 = self._x
         y0 = self._y
         if not self.isdown():
-            self._x = x1  # woot, we just skip ahead
-            self._y = y1
+            self._x = xn  # woot, we just skip ahead
+            self._y = yn
             self._drawturtle()
             return
-        steep = abs(y1 - y0) > abs(x1 - x0)
+        steep = abs(yn - y0) > abs(xn - x0)
         rev = False
-        dx = x1 - x0
+        dx = xn - x0
 
         if steep:
             x0, y0 = y0, x0
-            x1, y1 = y1, x1
-            dx = x1 - x0
+            xn, yn = yn, xn
+            dx = xn - x0
 
-        if x0 > x1:
+        if x0 > xn:
             rev = True
-            dx = x0 - x1
+            dx = x0 - xn
 
-        dy = abs(y1 - y0)
+        dy = abs(yn - y0)
         err = dx / 2
         ystep = -1
-        if y0 < y1:
+        if y0 < yn:
             ystep = 1
         step = 1
         if self._speed > 0:
@@ -366,7 +375,7 @@ class turtle:
         else:
             ts = 0
 
-        while (not rev and x0 <= x1) or (rev and x1 <= x0):
+        while (not rev and x0 <= xn) or (rev and xn <= x0):
             if steep:
                 try:
                     self._plot(int(y0), int(x0), self._pencolor)
@@ -404,7 +413,7 @@ class turtle:
 
     # pylint:enable=too-many-branches,too-many-statements
 
-    def setx(self, x):
+    def setx(self, x: float) -> None:
         """Set the turtle's first coordinate to x, leave second coordinate
         unchanged.
 
@@ -413,7 +422,7 @@ class turtle:
         """
         self.goto(x, self.pos()[1])
 
-    def sety(self, y):
+    def sety(self, y: float) -> None:
         """Set the turtle's second coordinate to y, leave first coordinate
         unchanged.
 
@@ -422,7 +431,7 @@ class turtle:
         """
         self.goto(self.pos()[0], y)
 
-    def setheading(self, to_angle):
+    def setheading(self, to_angle: float) -> None:
         """Set the orientation of the turtle to to_angle. Here are some common
         directions in degrees:
 
@@ -442,7 +451,7 @@ class turtle:
 
     seth = setheading
 
-    def home(self):
+    def home(self) -> None:
         """Move turtle to the origin - coordinates (0,0) - and set its heading
         to its start-orientation
         (which depends on the mode, see mode()).
@@ -451,7 +460,7 @@ class turtle:
         self.goto(0, 0)
 
     # pylint:disable=too-many-locals, too-many-statements, too-many-branches
-    def _plot(self, x, y, c):
+    def _plot(self, x: float, y: float, c: int) -> None:
         if self._pensize == 1:
             try:
                 self._fg_bitmap[int(x), int(y)] = c
@@ -531,7 +540,9 @@ class turtle:
 
     # pylint:enable=too-many-locals, too-many-statements, too-many-branches
 
-    def circle(self, radius, extent=None, steps=None):
+    def circle(
+        self, radius: float, extent: Optional[float] = None, steps: Optional[int] = None
+    ) -> None:
         """Draw a circle with given radius. The center is radius units left of
         the turtle; extent - an angle - determines which part of the circle is
         drawn. If extent is not given, draw the entire circle. If extent is not
@@ -575,9 +586,8 @@ class turtle:
         self.setheading(h)
 
     # pylint:disable=inconsistent-return-statements
-    def speed(self, speed=None):
+    def speed(self, speed: Optional[int] = None) -> Optional[int]:
         """
-
         Set the turtle's speed to an integer value in the range 0..10. If no
         argument is given, return current speed.
 
@@ -604,10 +614,11 @@ class turtle:
             self._speed = 0
         else:
             self._speed = speed
+        return None
 
     # pylint:enable=inconsistent-return-statements
 
-    def dot(self, size=None, color=None):
+    def dot(self, size: Optional[int] = None, color: Optional[int] = None) -> None:
         """Draw a circular dot with diameter size, using color.
         If size is not given, the maximum of pensize+4 and
         2*pensize is used.
@@ -640,7 +651,11 @@ class turtle:
             self._plot(self._x, self._y, color)
             self._pensize = pensize
 
-    def stamp(self, bitmap=None, palette=None):
+    def stamp(
+        self,
+        bitmap: Optional[displayio.Bitmap] = None,
+        palette: Optional[displayio.Palette] = None,
+    ) -> int:
         """
         Stamp a copy of the turtle shape onto the canvas at the current
         turtle position. Return a stamp_id for that stamp, which can be used to
@@ -683,7 +698,7 @@ class turtle:
 
         return s_id
 
-    def clearstamp(self, stampid):
+    def clearstamp(self, stampid: int) -> None:
         """
 
         Delete stamp with given stampid.
@@ -705,9 +720,8 @@ class turtle:
         else:
             raise TypeError("Stamp id must be an int")
 
-    def clearstamps(self, n=None):
+    def clearstamps(self, n: Optional[int] = None) -> None:
         """
-
         Delete all or first/last n of turtle's stamps. If n is None, delete
         all stamps, if n > 0 delete first n stamps, else if n < 0 delete last
         n stamps.
@@ -726,13 +740,15 @@ class turtle:
     ###########################################################################
     # Tell turtle's state
 
-    def pos(self):
+    def pos(self) -> Vec2D:
         """Return the turtle's current location (x,y) (as a Vec2D vector)."""
         return Vec2D(self._x - self._w // 2, self._h // 2 - self._y)
 
     position = pos
 
-    def towards(self, x1, y1=None):
+    def towards(
+        self, x1: Union[float, Vec2D, Tuple[float, float]], y1: Optional[float] = None
+    ) -> float:
         """
         Return the angle between the line from turtle position to position
         specified by (x,y) or the vector. This depends on the turtle's start
@@ -751,21 +767,23 @@ class turtle:
         result /= self._degreesPerAU
         return (self._angleOffset + self._angleOrient * result) % self._fullcircle
 
-    def xcor(self):
+    def xcor(self) -> float:
         """Return the turtle's x coordinate."""
         return self._x - self._w // 2
 
-    def ycor(self):
+    def ycor(self) -> float:
         """Return the turtle's y coordinate."""
         return self._h // 2 - self._y
 
-    def heading(self):
+    def heading(self) -> float:
         """Return the turtle's current heading (value depends on the turtle
         mode, see mode()).
         """
         return self._heading
 
-    def distance(self, x1, y1=None):
+    def distance(
+        self, x1: Union[float, List[float], Tuple[float, float]], y1: Optional[float]
+    ) -> float:
         """
         Return the distance from the turtle to (x,y) or the vector, in turtle
         step units.
@@ -774,16 +792,16 @@ class turtle:
         :param y: a number if x is a number, else None
 
         """
-        if y1 is None:
-            y1 = x1[1]
-            x1 = x1[0]
-        x0, y0 = self.pos()
-        return math.sqrt((x0 - x1) ** 2 + (y0 - y1) ** 2)
+        yn: float = x1[1] if y1 is None else y1  # type: ignore
+        xn: float = x1[0] if y1 is None else x1  # type: ignore
+        p = self.pos()
+        x0, y0 = (p[0], p[1])
+        return math.sqrt((x0 - xn) ** 2 + (y0 - yn) ** 2)
 
     ###########################################################################
     # Setting and measurement
 
-    def _setDegreesPerAU(self, fullcircle):
+    def _setDegreesPerAU(self, fullcircle: float) -> None:
         """Helper function for degrees() and radians()"""
         self._fullcircle = fullcircle
         self._degreesPerAU = 360 / fullcircle
@@ -792,7 +810,7 @@ class turtle:
         else:
             self._angleOffset = -fullcircle / 4
 
-    def degrees(self, fullcircle=360):
+    def degrees(self, fullcircle: float = 360) -> None:
         """Set angle measurement units, i.e. set number of "degrees" for
         a full circle.
         Default value is 360 degrees.
@@ -801,12 +819,12 @@ class turtle:
         """
         self._setDegreesPerAU(fullcircle)
 
-    def radians(self):
+    def radians(self) -> None:
         """Set the angle measurement units to radians.
         Equivalent to degrees(2*math.pi)."""
         self._setDegreesPerAU(2 * math.pi)
 
-    def mode(self, mode=None):
+    def mode(self, mode: Optional[str] = None) -> Optional[str]:
         """
 
         Set turtle mode ("standard" or "logo") and perform reset.
@@ -833,12 +851,12 @@ class turtle:
             raise RuntimeError("Mode must be 'logo', 'standard', or None")
         return None
 
-    def window_height(self):
+    def window_height(self) -> float:
         """
         Return the height of the turtle window."""
         return self._h
 
-    def window_width(self):
+    def window_width(self) -> float:
         """
         Return the width of the turtle window."""
         return self._w
@@ -846,25 +864,25 @@ class turtle:
     ###########################################################################
     # Drawing state
 
-    def pendown(self):
+    def pendown(self) -> None:
         """Pull the pen down - drawing when moving."""
         self._penstate = True
 
     pd = pendown
     down = pendown
 
-    def penup(self):
+    def penup(self) -> None:
         """Pull the pen up - no drawing when moving."""
         self._penstate = False
 
     pu = penup
     up = penup
 
-    def isdown(self):
+    def isdown(self) -> bool:
         """Return True if pen is down, False if it's up."""
         return self._penstate
 
-    def pensize(self, width=None):
+    def pensize(self, width: Optional[int] = None) -> int:
         """
         Set the line thickness to width or return it.
         If no argument is given, the current pensize is returned.
@@ -883,12 +901,12 @@ class turtle:
 
     # pylint:disable=no-self-use
 
-    def _color_to_pencolor(self, c):
+    def _color_to_pencolor(self, c: int) -> int:
         return Color.colors.index(c)
 
     # pylint:enable=no-self-use
 
-    def pencolor(self, c=None):
+    def pencolor(self, c: Optional[int] = None) -> int:
         """
         Return or set the pencolor.
 
@@ -916,7 +934,7 @@ class turtle:
             self._turtle_palette.make_opaque(1)
         return c
 
-    def bgcolor(self, c=None):
+    def bgcolor(self, c: Optional[int] = None) -> int:
         """
         Return or set the background color.
 
@@ -950,7 +968,7 @@ class turtle:
         return Color.colors[self._bg_color]
 
     # pylint:disable=inconsistent-return-statements
-    def bgpic(self, picname=None):
+    def bgpic(self, picname: Optional[str] = None) -> Optional[str]:
         """Set background image or return name of current backgroundimage.
         Optional argument:
         picname -- a string, name of an image file or "nopic".
@@ -978,13 +996,14 @@ class turtle:
             # centered
             self._odb_tilegrid.y = ((self._h * self._fg_scale) // 2) - (odb.height // 2)
             self._odb_tilegrid.x = ((self._w * self._fg_scale) // 2) - (odb.width // 2)
+        return None
 
     # pylint:enable=inconsistent-return-statements
 
     ###########################################################################
     # More drawing control
 
-    def reset(self):
+    def reset(self) -> None:
         """
         Delete the turtle's drawings from the screen, re-center the turtle
         and set variables to the default values."""
@@ -998,7 +1017,7 @@ class turtle:
         self.pensize(1)
         self.pencolor(Color.WHITE)
 
-    def clear(self):
+    def clear(self) -> None:
         """Delete the turtle's drawings from the screen. Do not move turtle."""
         self.clearstamps()
         for w in range(self._w):
@@ -1013,7 +1032,7 @@ class turtle:
     ###########################################################################
     # Visibility
 
-    def showturtle(self):
+    def showturtle(self) -> None:
         """
         Make the turtle visible."""
         if self._turtle_group:
@@ -1025,7 +1044,7 @@ class turtle:
 
     st = showturtle
 
-    def hideturtle(self):
+    def hideturtle(self) -> None:
         """
         Make the turtle invisible."""
         if not self._turtle_group:
@@ -1034,7 +1053,7 @@ class turtle:
 
     ht = hideturtle
 
-    def isvisible(self):
+    def isvisible(self) -> bool:
         """
         Return True if the Turtle is shown, False if it's hidden."""
         if self._turtle_group:
@@ -1042,7 +1061,11 @@ class turtle:
         return False
 
     # pylint:disable=too-many-statements, too-many-branches
-    def changeturtle(self, source=None, dimensions=(12, 12)):
+    def changeturtle(
+        self,
+        source: Optional[Union[displayio.TileGrid, str]] = None,
+        dimensions: Tuple[int, int] = (12, 12),
+    ) -> None:
         """
         Change the turtle.
         if a string is provided, its a path to an image opened via OnDiskBitmap
@@ -1116,7 +1139,7 @@ class turtle:
     ###########################################################################
     # Other
 
-    def _turn(self, angle):
+    def _turn(self, angle: float) -> None:
         if angle % self._fullcircle == 0:
             return
         if not self.isdown() or self._pensize == 1:
@@ -1147,7 +1170,7 @@ class turtle:
             return
 
         if abs(angle - steps * d_angle) >= abs(d_angle):
-            steps += abs(angle - steps * d_angle) // abs(d_angle)
+            steps += int(abs(angle - steps * d_angle) // abs(d_angle))
 
         self._plot(self._x, self._y, self._pencolor)
         for _ in range(steps):
@@ -1161,7 +1184,7 @@ class turtle:
             self._heading %= self._fullcircle
             self._plot(self._x, self._y, self._pencolor)
 
-    def _GCD(self, a, b):
+    def _GCD(self, a: int, b: int) -> int:
         """GCD(a,b):
         recursive 'Greatest common divisor' calculus for int numbers a and b"""
         if b == 0:
