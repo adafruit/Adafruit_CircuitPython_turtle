@@ -113,7 +113,7 @@ class Vec2D:
             return self[0] * other[0] + self[1] * other[1]
         return Vec2D(self[0] * other, self[1] * other)
 
-    def __rmul__(self, other: Union[float, int]) -> Vec2D:
+    def __rmul__(self, other: float) -> Optional[Vec2D]:
         if isinstance(other, (float, int)):
             return Vec2D(self[0] * other, self[1] * other)
         return None
@@ -176,7 +176,7 @@ class turtle:
         self._angleOffset: float = 0
         self._bg_color = 0
 
-        self._splash: Any = displayio.Group()
+        self._splash: displayio.Group = displayio.Group()
         self._bgscale: int = 1
         if self._w == self._h:
             i = 1
@@ -243,14 +243,14 @@ class turtle:
         self.pencolor(Color.WHITE)
         self._bg_pic = None
         self._bg_pic_filename = ""
-        self._turtle_pic: Any = None
-        self._turtle_odb: Any = None
-        self._turtle_alt_sprite: Any = None
+        self._turtle_pic = None
+        self._turtle_odb = None
+        self._turtle_alt_sprite = None
         self._drawturtle()
-        self._stamps: Dict[int, Any] = {}
+        self._stamps = {}
         self._turtle_odb_use = 0
-        self._turtle_odb_file: Optional[str] = None
-        self._odb_tilegrid: Any = None
+        self._turtle_odb_file = None
+        self._odb_tilegrid = None
         gc.collect()
         self._display.show(self._splash)
 
@@ -752,12 +752,12 @@ class turtle:
         :param y: a number if x is a number, else None
 
         """
-        yn: float = x1[1] if y1 is None else y1  # type: ignore
-        xn: float = x1[0] if y1 is None else x1  # type: ignore
-        p = self.pos()
-        x0, y0 = (p[0], p[1])
+        if y1 is None:
+            y1 = x1[1]
+            x1 = x1[0]
+        x0, y0 = self.pos()
 
-        result = math.degrees(math.atan2(xn - x0, yn - y0))
+        result = math.degrees(math.atan2(x1 - x0, y1 - y0))
         result /= self._degreesPerAU
         return (self._angleOffset + self._angleOrient * result) % self._fullcircle
 
@@ -1056,7 +1056,7 @@ class turtle:
 
     # pylint:disable=too-many-statements, too-many-branches
     def changeturtle(
-        self, source: Any = None, dimensions: Tuple[int, int] = (12, 12)
+        self, source: Optional[Union[displayio.TileGrid, str]] = None, dimensions: Tuple[int, int] = (12, 12)
     ) -> None:
         """
         Change the turtle.
