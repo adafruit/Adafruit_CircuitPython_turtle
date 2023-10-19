@@ -254,7 +254,7 @@ class turtle:
         self._turtle_odb_file = None
         self._odb_tilegrid = None
         gc.collect()
-        self._display.show(self._splash)
+        self._display.root_group = self._splash
 
     # pylint:enable=too-many-statements
 
