@@ -122,7 +122,7 @@ class Color:
 
     DARK_RED = 0x800000
     """0x800000
-    
+
     :meta hide-value:"""
 
     colors = (
