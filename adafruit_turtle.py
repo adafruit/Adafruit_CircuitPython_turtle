@@ -171,11 +171,11 @@ class turtle:
         self._y = self._h // (2 * scale)
         self._speed = 6
         self._heading: float = 0
-        self._logomode = True
         self._fullcircle = 360.0
         self._degreesPerAU = 1.0
-        self._angleOrient = 1
-        self._angleOffset: float = 0
+        self._logomode = False
+        self._angleOrient = -1
+        self._angleOffset: float = self._fullcircle / 4
         self._bg_color = 0
 
         self._splash: displayio.Group = displayio.Group()
