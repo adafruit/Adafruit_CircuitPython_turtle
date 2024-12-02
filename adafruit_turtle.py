@@ -46,83 +46,83 @@ class Color:
     """Standard colors"""
 
     WHITE = 0xFFFFFF
-    """White 0xFFFFFF
+    """0xFFFFFF
 
     :meta hide-value:"""
 
     BLACK = 0x000000
-    """Black 0x000000
+    """0x000000
 
     :meta hide-value:"""
 
     RED = 0xFF0000
-    """Red 0xFF0000
+    """0xFF0000
 
     :meta hide-value:"""
 
     ORANGE = 0xFFA500
-    """Orange 0xFFA500
+    """0xFFA500
 
     :meta hide-value:"""
 
     YELLOW = 0xFFEE00
-    """Yellow 0xFFEE00
+    """0xFFEE00
 
     :meta hide-value:"""
 
     GREEN = 0x00C000
-    """Green 0x00C000
+    """0x00C000
 
     :meta hide-value:"""
 
     BLUE = 0x0000FF
-    """Blue 0x0000FF
+    """0x0000FF
 
     :meta hide-value:"""
 
     PURPLE = 0x8040C0
-    """Purple 0x8040C0
+    """0x8040C0
 
     :meta hide-value:"""
 
     PINK = 0xFF40C0
-    """Pink 0xFF40C0
+    """0xFF40C0
 
     :meta hide-value:"""
 
     LIGHT_GRAY = 0xAAAAAA
-    """Light Gray 0xAAAAAA
+    """0xAAAAAA
 
     :meta hide-value:"""
 
     GRAY = 0x444444
-    """Gray 0x444444
+    """0x444444
 
     :meta hide-value:"""
 
     BROWN = 0xCA801D
-    """Brown 0xCA801D
+    """0xCA801D
 
     :meta hide-value:"""
 
     DARK_GREEN = 0x008700
-    """Dark Green 0x008700
+    """0x008700
 
     :meta hide-value:"""
 
     TURQUOISE = 0x00C0C0
-    """Turquoise 0x00C0C0
+    """0x00C0C0
 
     :meta hide-value:"""
 
     DARK_BLUE = 0x0000AA
-    """Dark Blue 0x0000AA
+    """0x0000AA
 
     :meta hide-value:"""
 
     DARK_RED = 0x800000
-    """Dark Red 0x800000
-
+    """0x800000
+    
     :meta hide-value:"""
 
     colors = (
