@@ -407,13 +407,17 @@ class turtle:
         xn: float = x1[0] if y1 is None else x1  # type: ignore
         xn += self._w // 2
         yn = self._h // 2 - yn
-        x0 = self._x
-        y0 = self._y
         if not self.isdown():
             self._x = xn  # woot, we just skip ahead
             self._y = yn
             self._drawturtle()
             return
+
+        self._do_draw_line(round(self._x), round(self._y), round(xn), round(yn))
+        self._x = xn
+        self._y = yn
+
+    def _do_draw_line(self, x0: int, y0: int, xn: int, yn: int):
         steep = abs(yn - y0) > abs(xn - x0)
         rev = False
         dx = xn - x0
@@ -444,15 +448,11 @@ class turtle:
                     self._plot(int(y0), int(x0), self._pencolor)
                 except IndexError:
                     pass
-                self._x = y0
-                self._y = x0
             else:
                 try:
                     self._plot(int(x0), int(y0), self._pencolor)
                 except IndexError:
                     pass
-                self._x = x0
-                self._y = y0
             if self._speed > 0:
                 if step >= self._speed:
                     # mark the step
