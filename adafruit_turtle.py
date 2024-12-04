@@ -655,7 +655,7 @@ class turtle:
         self.setheading(h)
         if change_back:
             self.radians()
-            self.mode(original_mode)  # pylint: disable=possibly-used-before-assignment
+            self.mode(original_mode)  # pylint:disable=possibly-used-before-assignment
 
     # pylint:disable=inconsistent-return-statements
     def speed(self, speed: Optional[int] = None) -> Optional[int]:
@@ -731,7 +731,7 @@ class turtle:
             self._pensize = pensize
         if change_back:
             self.radians()
-            self.mode(original_mode)  # pylint: disable=possibly-used-before-assignment
+            self.mode(original_mode)  # pylint:disable=possibly-used-before-assignment
 
     def stamp(
         self,
