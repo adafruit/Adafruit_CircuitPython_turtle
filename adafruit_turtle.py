@@ -311,6 +311,8 @@ class turtle:
         self._turtle_pic = None
         self._turtle_odb = None
         self._turtle_alt_sprite = None
+        self._turtle_x = self._x
+        self._turtle_y = self._y
         self._drawturtle()
         self._stamps = {}
         self._turtle_odb_use = 0
@@ -323,15 +325,23 @@ class turtle:
 
     def _drawturtle(self) -> None:
         if self._turtle_pic is None:
-            self._turtle_sprite.x = int(self._x - 4)
-            self._turtle_sprite.y = int(self._y - 4)
+            self._turtle_sprite.x = int(self._turtle_x - 4)
+            self._turtle_sprite.y = int(self._turtle_y - 4)
         else:
             if self._turtle_odb is not None:
-                self._turtle_alt_sprite.x = int(self._x - self._turtle_odb.width // 2)
-                self._turtle_alt_sprite.y = int(self._y - self._turtle_odb.height // 2)
+                self._turtle_alt_sprite.x = int(
+                    self._turtle_x - self._turtle_odb.width // 2
+                )
+                self._turtle_alt_sprite.y = int(
+                    self._turtle_y - self._turtle_odb.height // 2
+                )
             else:
-                self._turtle_alt_sprite.x = int(self._x - self._turtle_pic[0] // 2)
-                self._turtle_alt_sprite.y = int(self._y - self._turtle_pic[1] // 2)
+                self._turtle_alt_sprite.x = int(
+                    self._turtle_x - self._turtle_pic[0] // 2
+                )
+                self._turtle_alt_sprite.y = int(
+                    self._turtle_y - self._turtle_pic[1] // 2
+                )
 
     ###########################################################################
     # Move and draw
@@ -448,11 +458,15 @@ class turtle:
                     self._plot(int(y0), int(x0), self._pencolor)
                 except IndexError:
                     pass
+                self._turtle_x = y0
+                self._turtle_y = x0
             else:
                 try:
                     self._plot(int(x0), int(y0), self._pencolor)
                 except IndexError:
                     pass
+                self._turtle_x = x0
+                self._turtle_y = y0
             if self._speed > 0:
                 if step >= self._speed:
                     # mark the step
