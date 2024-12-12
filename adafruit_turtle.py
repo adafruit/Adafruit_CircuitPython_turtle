@@ -640,6 +640,12 @@ class turtle:
         # --or: circle(radius, extent)          # arc
         # --or: circle(radius, extent, steps)
         # --or: circle(radius, steps=6)         # 6-sided polygon
+        change_back = False
+        if not self._in_degrees():
+            change_back = True
+            original_mode = "standard" if not self._logomode else "logo"
+            self.degrees()
+            self.mode("standard")
         pos = self.pos()
         h = self._heading
         if extent is None:
@@ -661,6 +667,9 @@ class turtle:
         # get back to exact same position and heading
         self.goto(pos)
         self.setheading(h)
+        if change_back:
+            self.radians()
+            self.mode(original_mode)
 
     # pylint:disable=inconsistent-return-statements
     def speed(self, speed: Optional[int] = None) -> Optional[int]:
@@ -704,6 +713,13 @@ class turtle:
         :param color: the color of the dot
 
         """
+        change_back = False
+        if not self._in_degrees():
+            change_back = True
+            original_mode = "standard" if not self._logomode else "logo"
+            print(f"old mode: {original_mode}")
+            self.degrees()
+            self.mode("standard")
         if size is None:
             size = max(self._pensize + 4, self._pensize * 2)
         if color is None:
@@ -727,6 +743,9 @@ class turtle:
             self._pensize = 1
             self._plot(self._x, self._y, color)
             self._pensize = pensize
+        if change_back:
+            self.radians()
+            self.mode(original_mode)
 
     def stamp(
         self,
@@ -895,6 +914,10 @@ class turtle:
         :param fullcircle: the number of degrees in a full circle
         """
         self._setDegreesPerAU(fullcircle)
+
+    def _in_degrees(self) -> bool:
+        print(self._degreesPerAU)
+        return self._degreesPerAU == 1.0
 
     def radians(self) -> None:
         """Set the angle measurement units to radians.
