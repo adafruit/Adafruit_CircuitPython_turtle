@@ -39,7 +39,6 @@ autodoc_mock_imports = [
     "adafruit_bitmap_font",
     "adafruit_display_text",
     "adafruit_esp32spi",
-    "secrets",
     "adafruit_sdcard",
     "storage",
     "adafruit_io",
