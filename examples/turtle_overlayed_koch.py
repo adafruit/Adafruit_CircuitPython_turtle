@@ -1,10 +1,9 @@
 # SPDX-FileCopyrightText: 2021 ladyada for Adafruit Industries
 # SPDX-License-Identifier: MIT
 
-# pylint: disable=unnecessary-lambda-assignment
-
 import board
-from adafruit_turtle import turtle, Color
+
+from adafruit_turtle import Color, turtle
 
 generation_colors = [Color.RED, Color.BLUE, Color.GREEN, Color.YELLOW]
 

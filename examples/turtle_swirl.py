@@ -2,7 +2,8 @@
 # SPDX-License-Identifier: MIT
 
 import board
-from adafruit_turtle import turtle, Color
+
+from adafruit_turtle import Color, turtle
 
 turtle = turtle(board.DISPLAY)
 

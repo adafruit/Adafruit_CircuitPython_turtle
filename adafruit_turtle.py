@@ -23,14 +23,15 @@ Implementation Notes
 * Adafruit's Bus Device library:
   https://github.com/adafruit/Adafruit_CircuitPython_BusDevice
 """
+
 from __future__ import annotations
 
 # pylint:disable=too-many-public-methods, too-many-instance-attributes, invalid-name
 # pylint:disable=too-few-public-methods, too-many-lines, too-many-arguments
-
 import gc
 import math
 import time
+
 import displayio
 
 try:
@@ -205,28 +206,22 @@ class Vec2D:
         return (self[0], self[1])
 
     def __repr__(self) -> str:
-        return "({:.2f},{:.2f})".format(self[0], self[1])
+        return f"({self[0]:.2f},{self[1]:.2f})"
 
 
 class turtle:
     """A Turtle that can be given commands to draw."""
 
-    # pylint:disable=too-many-statements
-    def __init__(
-        self, display: Optional[displayio.Display] = None, scale: float = 1
-    ) -> None:
+    def __init__(self, display: Optional[displayio.Display] = None, scale: float = 1) -> None:
         if display:
             self._display = display
         else:
             try:
-                # pylint: disable=import-outside-toplevel
                 import board
 
                 self._display = board.DISPLAY
             except AttributeError as err:
-                raise RuntimeError(
-                    "No display available. One must be provided."
-                ) from err
+                raise RuntimeError("No display available. One must be provided.") from err
 
         self._w: int = self._display.width
         self._h: int = self._display.height
@@ -327,21 +322,12 @@ class turtle:
         if self._turtle_pic is None:
             self._turtle_sprite.x = int(self._turtle_x - 4)
             self._turtle_sprite.y = int(self._turtle_y - 4)
+        elif self._turtle_odb is not None:
+            self._turtle_alt_sprite.x = int(self._turtle_x - self._turtle_odb.width // 2)
+            self._turtle_alt_sprite.y = int(self._turtle_y - self._turtle_odb.height // 2)
         else:
-            if self._turtle_odb is not None:
-                self._turtle_alt_sprite.x = int(
-                    self._turtle_x - self._turtle_odb.width // 2
-                )
-                self._turtle_alt_sprite.y = int(
-                    self._turtle_y - self._turtle_odb.height // 2
-                )
-            else:
-                self._turtle_alt_sprite.x = int(
-                    self._turtle_x - self._turtle_pic[0] // 2
-                )
-                self._turtle_alt_sprite.y = int(
-                    self._turtle_y - self._turtle_pic[1] // 2
-                )
+            self._turtle_alt_sprite.x = int(self._turtle_x - self._turtle_pic[0] // 2)
+            self._turtle_alt_sprite.y = int(self._turtle_y - self._turtle_pic[1] // 2)
 
     ###########################################################################
     # Move and draw
@@ -352,9 +338,7 @@ class turtle:
         :param distance: how far to move (integer or float)
         """
         p = self.pos()
-        angle = (
-            self._angleOffset + self._angleOrient * self._heading
-        ) % self._fullcircle
+        angle = (self._angleOffset + self._angleOrient * self._heading) % self._fullcircle
         x1 = p[0] + math.sin(math.radians(angle)) * distance
         y1 = p[1] + math.cos(math.radians(angle)) * distance
         self.goto(x1, y1)
@@ -545,9 +529,7 @@ class turtle:
             except IndexError:
                 pass
         r = self._pensize // 2 + 1
-        angle = (
-            self._angleOffset + self._angleOrient * self._heading - 90
-        ) % self._fullcircle
+        angle = (self._angleOffset + self._angleOrient * self._heading - 90) % self._fullcircle
         sin = math.sin(math.radians(angle))
         cos = math.cos(math.radians(angle))
         x0 = x + sin * r
@@ -826,7 +808,7 @@ class turtle:
 
         """
         i = 1
-        for sid in self._stamps:  # pylint: disable=consider-using-dict-items
+        for sid in self._stamps:
             if self._stamps[sid] is not None:
                 self.clearstamp(sid)
                 if n is not None and i >= n:
@@ -1230,9 +1212,7 @@ class turtle:
                 self._turtle_group.append(self._turtle_alt_sprite)
             self._drawturtle()
         else:
-            raise TypeError(
-                'Argument must be "str", a "displayio.TileGrid" or nothing.'
-            )
+            raise TypeError('Argument must be "str", a "displayio.TileGrid" or nothing.')
 
     # pylint:enable=too-many-statements, too-many-branches
 
@@ -1247,9 +1227,7 @@ class turtle:
             self._heading %= self._fullcircle  # wrap
             return
         start_angle = self._heading
-        steps = math.ceil(
-            (self._pensize * 2) * 3.1415 * (abs(angle) / self._fullcircle)
-        )
+        steps = math.ceil((self._pensize * 2) * 3.1415 * (abs(angle) / self._fullcircle))
         if steps < 1:
             d_angle = angle
             steps = 1
