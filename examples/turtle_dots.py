@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: MIT
 
 import board
+
 from adafruit_turtle import turtle
 
 print("Turtle time! Lets draw a square with dots")
