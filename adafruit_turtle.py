@@ -36,6 +36,8 @@ import displayio
 
 try:
     from typing import List, Optional, Tuple, Union
+
+    import busdisplay
 except ImportError:
     pass
 
@@ -212,7 +214,7 @@ class Vec2D:
 class turtle:
     """A Turtle that can be given commands to draw."""
 
-    def __init__(self, display: Optional[displayio.Display] = None, scale: float = 1) -> None:
+    def __init__(self, display: Optional[busdisplay.BusDisplay] = None, scale: float = 1) -> None:
         if display:
             self._display = display
         else:
