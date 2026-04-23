@@ -103,6 +103,7 @@ ignore = [
     "PLC2701", # private import
     "UP007", # x | y typing
     "UP006", # builtin instead of typing import
+    "UP045", # use X | None for optional type annotations
     "PLR0914", # too many locals
 ]
 

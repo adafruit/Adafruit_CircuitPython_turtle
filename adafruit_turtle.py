@@ -264,8 +264,8 @@ class turtle:
         self._bg_addon_group = displayio.Group()
         self._splash.append(self._bg_addon_group)
         self._fg_scale: int = int(scale)
-        self._w = self._w // self._fg_scale
-        self._h = self._h // self._fg_scale
+        self._w //= self._fg_scale
+        self._h //= self._fg_scale
         self._fg_bitmap = displayio.Bitmap(self._w, self._h, len(Color.colors))
 
         self._fg_palette = displayio.Palette(len(Color.colors))
